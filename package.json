@@ -1,0 +1,28 @@
+{
+  "name": "diapason",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Entraînement à l’oreille absolue : notes seules et accords (méthode Eguchi).",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "fonts": "node scripts/fetch-fonts.mjs",
+    "icons": "node scripts/icons.mjs && capacitor-assets generate --ios --android --iconBackgroundColor \"#14161B\" --iconBackgroundColorDark \"#14161B\" --splashBackgroundColor \"#14161B\" --splashBackgroundColorDark \"#0D0F13\"",
+    "sync": "npm run build && cap sync",
+    "android": "npm run sync && cap open android",
+    "ios": "npm run sync && cap open ios",
+    "serve": "npm run build && python -m http.server 8765 --directory www"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/preferences": "^8.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.2",
+    "sharp": "^0.35.4"
+  }
+}

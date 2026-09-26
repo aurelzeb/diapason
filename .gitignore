@@ -1,0 +1,5 @@
+node_modules/
+www/
+.claude/
+.DS_Store
+Thumbs.db

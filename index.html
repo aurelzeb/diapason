@@ -1,0 +1,2587 @@
+<meta charset="utf-8">
+<title>Diapason</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500..800&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{
+  --bg:#E8EBEF;
+  --surface:#FFFFFF;
+  --surface-2:#F1F3F6;
+  --ink:#14161B;
+  --ink-2:#535A65;
+  --ink-3:#848B96;
+  --line:#D4D9E0;
+  --brass:#9A6812;
+  --brass-ink:#FFFFFF;
+  --brass-soft:#F3E7CF;
+  --good:#23683F;
+  --good-soft:#DAEEE1;
+  --on-good:#FFFFFF;
+  --bad:#A2342A;
+  --bad-soft:#F7DFDB;
+  --on-bad:#FFFFFF;
+  --flame:#D0561C;
+  --on-flame:#FFFFFF;
+  --star:#E2A31F;
+  --u1:#9A6812;
+  --u2:#1D6B73;
+  --u3:#74406B;
+  --u4:#3C5689;
+  --u5:#4E6A2E;
+  --on-u:#FFFFFF;
+  --uc:var(--u1);
+  /* Drapeaux des accords (méthode Eguchi) */
+  --f0:#C8413A;--on-f0:#FFFFFF;
+  --f1:#E3B52F;--on-f1:#1D1604;
+  --f2:#2F63B8;--on-f2:#FFFFFF;
+  --f3:#2A2C31;--on-f3:#FFFFFF;
+  --f4:#2A7B4B;--on-f4:#FFFFFF;
+  --f5:#DD7A2C;--on-f5:#1F1003;
+  --f6:#7449B5;--on-f6:#FFFFFF;
+  --f7:#DB7BA8;--on-f7:#240A17;
+  --f8:#85573A;--on-f8:#FFFFFF;
+  --felt:#7C2331;
+  --key-white:#FDFDFB;
+  --key-white-2:#ECECE7;
+  --key-white-ink:#14161B;
+  --key-edge:#C3C8D0;
+  --key-off:#9AA0A9;
+  --key-black:#17191E;
+  --key-black-top:#2C2F36;
+  --key-black-hover:#3A3E46;
+  --key-black-ink:#D4D8DE;
+  --knob:#FFFFFF;
+  --tip-bg:#14161B;
+  --tip-ink:#F4F5F7;
+  --shadow:0 1px 2px rgba(20,22,27,.05),0 10px 30px rgba(20,22,27,.08);
+  --display:"Bodoni Moda","Bodoni 72",Didot,Georgia,serif;
+  --sans:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D0F13;--surface:#161920;--surface-2:#1E222A;--ink:#ECEAE5;--ink-2:#A0A7B2;--ink-3:#6F7783;--line:#2A2F39;
+    --brass:#D6A447;--brass-ink:#1A1408;--brass-soft:#382C15;
+    --good:#63C08A;--good-soft:#15301F;--on-good:#0A1A10;--bad:#EA7064;--bad-soft:#3A1B18;--on-bad:#1E0906;
+    --flame:#F0874A;--on-flame:#1E0E04;--star:#EDB83A;
+    --u1:#D6A447;--u2:#5DB5BE;--u3:#C98BBE;--u4:#8FA8DD;--u5:#9CBF6A;--on-u:#15130E;--f3:#5E636E;
+    --felt:#6B1E2A;--key-white:#E4E2DC;--key-white-2:#CCC9C1;--key-white-ink:#17191D;--key-edge:#07080A;--key-off:#7E7C76;
+    --key-black:#08090B;--key-black-top:#23262C;--key-black-hover:#30343B;--key-black-ink:#AEB4BD;
+    --knob:#F4F2EE;--tip-bg:#ECEAE5;--tip-ink:#14161B;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D0F13;--surface:#161920;--surface-2:#1E222A;--ink:#ECEAE5;--ink-2:#A0A7B2;--ink-3:#6F7783;--line:#2A2F39;
+  --brass:#D6A447;--brass-ink:#1A1408;--brass-soft:#382C15;
+  --good:#63C08A;--good-soft:#15301F;--on-good:#0A1A10;--bad:#EA7064;--bad-soft:#3A1B18;--on-bad:#1E0906;
+  --flame:#F0874A;--on-flame:#1E0E04;--star:#EDB83A;
+  --u1:#D6A447;--u2:#5DB5BE;--u3:#C98BBE;--u4:#8FA8DD;--u5:#9CBF6A;--on-u:#15130E;--f3:#5E636E;
+  --felt:#6B1E2A;--key-white:#E4E2DC;--key-white-2:#CCC9C1;--key-white-ink:#17191D;--key-edge:#07080A;--key-off:#7E7C76;
+  --key-black:#08090B;--key-black-top:#23262C;--key-black-hover:#30343B;--key-black-ink:#AEB4BD;
+  --knob:#F4F2EE;--tip-bg:#ECEAE5;--tip-ink:#14161B;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.35);
+}
+.c1{--uc:var(--u1)}.c2{--uc:var(--u2)}.c3{--uc:var(--u3)}.c4{--uc:var(--u4)}.c5{--uc:var(--u5)}
+.c1,.c2,.c3,.c4,.c5{--uc-deep:color-mix(in srgb,var(--uc) 70%,#000);--uc-soft:color-mix(in srgb,var(--uc) 16%,var(--surface));--uc-text:color-mix(in srgb,var(--uc) 62%,var(--ink))}
+
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:20px 72px}
+.mono{font-family:var(--mono)}
+.muted{color:var(--ink-2)}
+.h2{margin:0;font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1;text-wrap:balance}
+.h3{margin:0;font-size:15px;font-weight:600}
+.caption{margin:0;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.caption:empty{display:none}
+
+/* En-tête */
+.top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px 24px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand svg{width:22px;height:34px;color:var(--brass);flex:none}
+.brand h1{margin:0;font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:.005em}
+.brand p{margin:4px 0 0;font-size:12.5px;color:var(--ink-2)}
+.brand .mono{font-size:11.5px;white-space:nowrap}
+.tabs{justify-self:center}
+.tabs button{padding:8px 18px;font-size:14px;font-weight:600}
+.hstats{display:flex;align-items:center;gap:8px}
+.pillstat{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pillstat svg{width:18px;height:18px;flex:none}
+.flame{fill:var(--ink-3)}
+.flame.on{fill:var(--flame)}
+.ring{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:3.2}
+.ring .rb{stroke:var(--line)}
+.ring .rf{stroke:var(--flame);stroke-linecap:round;stroke-dasharray:47.12;transition:stroke-dashoffset .6s ease}
+body.in-lesson .top{display:none}
+.tabs svg{display:none}
+/* Sur téléphone, les onglets deviennent une barre de navigation en bas de l'écran. */
+@media (max-width:820px){
+  .top{grid-template-columns:minmax(0,1fr) auto}
+  .top .tabs{position:fixed;left:0;right:0;bottom:0;justify-self:stretch;z-index:30;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));border-width:1px 0 0;border-radius:0;background:var(--surface)}
+  .top .tabs button{display:grid;justify-items:center;gap:2px;padding:6px 4px;border-radius:10px;font-size:12px}
+  .tabs svg{display:block;width:22px;height:22px}
+  .top .tabs button[aria-pressed="true"]{background:var(--surface-2);color:var(--brass);box-shadow:none}
+  .wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+  body.in-lesson .wrap{padding-bottom:40px}
+}
+@media (max-width:400px){.brand p{display:none}.brand h1{font-size:28px}}
+
+/* Contrôles segmentés */
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px}
+.seg button,.seg label>span{display:block;padding:6px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink-2);font-size:13.5px;font-weight:500;cursor:pointer;text-align:center;line-height:1.3}
+.seg button[aria-pressed="true"],.seg input:checked+span{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08),inset 0 0 0 1px var(--line)}
+.seg label{position:relative;display:block;min-width:0}
+.seg input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.seg input:focus-visible+span{outline:2px solid var(--brass);outline-offset:1px}
+.seg.full{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);width:100%}
+.seg small{display:block;margin-top:1px;font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-3)}
+.seg.small button{padding:5px 10px;font-size:13px}
+
+/* Boutons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border:1px solid transparent;border-radius:12px;font-weight:600;font-size:15px;cursor:pointer;text-align:center}
+.btn.primary{background:var(--brass);color:var(--brass-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--brass) 65%,#000)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.primary:active{transform:translateY(2px);box-shadow:0 2px 0 color-mix(in srgb,var(--brass) 65%,#000)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--ink-3)}
+.btn.good{background:var(--good);color:var(--on-good);box-shadow:0 4px 0 color-mix(in srgb,var(--good) 65%,#000)}
+.btn.bad{background:var(--bad);color:var(--on-bad);box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 65%,#000)}
+.btn.danger{background:var(--bad);color:var(--on-bad);padding:8px 14px;font-size:14px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none;transform:none}
+.btn.sm{padding:8px 12px;font-size:13.5px;font-weight:500;border-radius:10px}
+.btn svg{width:14px;height:14px;flex:none}
+.link{padding:4px;border:0;background:none;color:var(--ink-2);font-size:13.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.link:hover{color:var(--ink)}
+.lesson .btn.primary,.result .btn.primary{background:var(--uc);color:var(--on-u);box-shadow:0 4px 0 var(--uc-deep)}
+.lesson .btn.primary:active,.result .btn.primary:active{box-shadow:0 2px 0 var(--uc-deep)}
+
+/* Parcours */
+.path-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:40px;align-items:start}
+.aside{position:sticky;top:16px;display:grid;gap:16px}
+.m-review{display:none}
+@media (max-width:900px){.path-layout{grid-template-columns:minmax(0,1fr);gap:28px}.aside{position:static}.m-review{display:inline-flex;justify-self:start}}
+.path{--zig:1px;display:grid;gap:40px;width:100%;max-width:520px;margin:0 auto}
+@media (max-width:420px){.path{--zig:.72px}}
+.unit{display:grid;gap:34px}
+.unit-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--uc);color:var(--on-u);box-shadow:0 5px 0 var(--uc-deep)}
+.unit-kicker{margin:0;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.unit-title{margin:2px 0 0;font-family:var(--display);font-size:27px;font-weight:700;line-height:1.1;text-wrap:balance}
+.unit-blurb{margin:6px 0 0;font-size:13.5px;line-height:1.45;opacity:.95}
+.unit-kbd svg{display:block;width:98px;height:44px}
+.mk-w{fill:#FDFDFB;stroke:rgba(0,0,0,.3);stroke-width:1}
+.mk-b{fill:#1A1C21}
+.mk-new{fill:var(--star);stroke:#1A1C21;stroke-width:1}
+.mk-old-w{fill:var(--uc)}
+.mk-old-b{fill:#FDFDFB}
+.jump{margin-top:12px;padding:6px 12px;border:1.5px solid color-mix(in srgb,var(--on-u) 55%,transparent);border-radius:10px;background:transparent;color:var(--on-u);font-size:13px;font-weight:600;cursor:pointer}
+.jump:hover{background:color-mix(in srgb,var(--on-u) 14%,transparent)}
+.nodes{display:grid;gap:26px;justify-items:center;margin:0;padding:0;list-style:none}
+.node-row{position:relative;display:grid;justify-items:center;width:100%}
+.node-wrap{position:relative;display:grid;justify-items:center;gap:7px;transform:translateX(calc(var(--ox) * var(--zig)))}
+.node{display:grid;place-items:center;width:70px;height:64px;border:0;border-radius:50%;background:var(--uc);color:var(--on-u);box-shadow:0 7px 0 var(--uc-deep);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.node svg{width:28px;height:28px}
+.node.exam{width:82px;height:74px}
+.node.exam svg{width:34px;height:34px}
+.node:active{transform:translateY(4px);box-shadow:0 3px 0 var(--uc-deep)}
+.node.current{box-shadow:0 7px 0 var(--uc-deep),0 0 0 8px var(--bg),0 0 0 13px color-mix(in srgb,var(--uc) 35%,transparent)}
+.node.locked{background:var(--surface-2);color:var(--ink-3);box-shadow:inset 0 0 0 1.5px var(--line),0 7px 0 var(--line)}
+.node.skipped{background:var(--uc-soft);color:var(--uc);box-shadow:inset 0 0 0 2px var(--uc),0 7px 0 var(--uc-deep)}
+.node:focus-visible{outline:3px solid var(--brass);outline-offset:6px}
+.bubble{position:absolute;bottom:calc(100% + 16px);left:50%;padding:6px 12px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--uc-text);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;transform:translateX(-50%);animation:bob 1.8s ease-in-out infinite;pointer-events:none}
+.bubble::after{content:"";position:absolute;top:100%;left:50%;width:10px;height:10px;margin:-5px 0 0 -5px;background:var(--surface);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+@keyframes bob{50%{transform:translate(-50%,-5px)}}
+.pop{position:absolute;top:calc(100% + 14px);left:50%;z-index:6;display:grid;gap:4px;width:min(300px,100%);padding:16px;border-radius:16px;background:var(--uc);color:var(--on-u);box-shadow:0 14px 34px rgba(0,0,0,.2);transform:translateX(-50%);text-align:left}
+.pop::before{content:"";position:absolute;top:-7px;left:calc(50% + var(--ox) * var(--zig) - 7px);width:14px;height:14px;border-radius:2px;background:inherit;transform:rotate(45deg)}
+.pop.locked{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.pop.locked::before{top:-8px;border-left:1px solid var(--line);border-top:1px solid var(--line)}
+.pop-title{margin:0;font-family:var(--display);font-size:23px;font-weight:700;line-height:1.1}
+.pop-sub{margin:0;font-size:13.5px;opacity:.92}
+.pop .stars{margin-top:4px}
+.pop .stars svg.off{fill:color-mix(in srgb,var(--on-u) 35%,transparent)}
+.pop .btn{margin-top:10px;background:var(--on-u);color:var(--uc);box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.pop.locked .btn{background:var(--surface-2);color:var(--ink-3);box-shadow:none}
+.path-end{display:grid;justify-items:center;gap:8px;padding:24px 18px;border:1px dashed var(--line);border-radius:16px;text-align:center}
+.path-end svg{width:40px;height:40px;color:var(--star)}
+.path-end p{margin:0;max-width:40ch;color:var(--ink-2);font-size:14px}
+.stars{display:inline-flex;gap:2px}
+.stars svg{width:16px;height:16px}
+.stars svg.on{fill:var(--star)}
+.stars svg.off{fill:var(--line)}
+.stars.lg{gap:12px}
+.stars.lg svg{width:54px;height:54px}
+.stars.lg svg{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+.stars.lg svg:nth-child(2){animation-delay:.18s}
+.stars.lg svg:nth-child(3){animation-delay:.36s}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+
+/* Colonne latérale */
+.acard{display:grid;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.acard-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.goal-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px}
+.goalbar{height:12px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.goalbar i{display:block;width:0;height:100%;border-radius:6px;background:var(--flame);transition:width .8s ease}
+.goal-num{font-family:var(--mono);font-size:13px;font-weight:500;white-space:nowrap}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{display:grid;justify-items:center;gap:4px;font-size:11.5px;color:var(--ink-3)}
+.wd i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2)}
+.wd i svg{width:15px;height:15px}
+.wd.practiced i{background:transparent;box-shadow:inset 0 0 0 2.5px var(--flame)}
+.wd.goal i{background:var(--flame);color:var(--on-flame)}
+.wd.future i{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
+.wd.today span{color:var(--ink);font-weight:700}
+.streak-line{margin:0;font-size:13.5px;font-weight:500}
+.weak{display:flex;flex-wrap:wrap;gap:6px}
+.wchip{padding:4px 11px;border-radius:999px;font-size:13px;font-weight:600}
+.wchip.weak{background:var(--bad-soft);color:var(--bad)}
+.wchip.mid{background:var(--brass-soft);color:var(--ink)}
+.wchip.good{background:var(--good-soft);color:var(--good)}
+.pref-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+.store-note{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2)}
+.store-note::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex:none}
+.store-note.cloud::before{background:var(--good)}
+.store-note.pending::before{background:var(--brass)}
+
+/* Réglages (entraînement libre) */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:clamp(18px,3vw,28px)}
+.free-card{max-width:560px;margin:0 auto}
+.card-head{display:grid;gap:6px;margin-bottom:22px}
+.card-head p{margin:0;font-size:14px}
+.form{display:grid;gap:22px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{padding:0;margin-bottom:9px;font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.preset{padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink-2);font-size:13px;font-weight:500;cursor:pointer}
+.preset:hover{color:var(--ink);border-color:var(--ink-3)}
+.preset[aria-pressed="true"]{background:var(--brass-soft);border-color:var(--brass);color:var(--ink)}
+.chips{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:6px 4px}
+.chip{min-width:0;height:38px;padding:0;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden}
+.chip.acc{background:var(--surface-2);font-size:12px}
+.chip:hover{border-color:var(--ink-3);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--brass-soft);border-color:var(--brass);color:var(--ink)}
+.hint{margin:10px 0 0;font-size:13px;color:var(--ink-2)}
+.hint.warn{color:var(--bad)}
+.switches{display:grid;gap:14px}
+.switch{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;align-items:start;cursor:pointer}
+.switch input{appearance:none;-webkit-appearance:none;position:relative;width:38px;height:22px;margin:0;border-radius:999px;background:var(--line);cursor:pointer;transition:background .15s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--knob);box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .15s}
+.switch input:checked{background:var(--brass)}
+.switch input:checked::after{transform:translateX(16px)}
+.switch .t{font-weight:500;font-size:14.5px}
+.switch small{grid-column:2;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.setup-msg{margin:0;padding:10px 12px;border-radius:10px;background:var(--surface-2);font-size:13.5px;color:var(--ink-2)}
+
+/* Leçon */
+.lesson,.result{max-width:640px;margin:0 auto}
+.lesson-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;margin-bottom:22px}
+.xbtn{display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:var(--ink-3);cursor:pointer}
+.xbtn:hover{background:var(--surface-2);color:var(--ink)}
+.xbtn svg{width:22px;height:22px}
+.lbar{height:14px;border-radius:7px;background:var(--surface-2);overflow:hidden}
+.lbar i{display:block;width:0;height:100%;border-radius:7px;background:var(--uc);transition:width .35s ease}
+.combo{min-width:5.5em;font-size:13px;font-weight:700;color:var(--flame);text-align:right;white-space:nowrap}
+.lesson-kicker{margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--uc-text)}
+.intro{display:grid;gap:14px}
+.intro-heading{margin:8px 0 0;font-size:13px;font-weight:600;color:var(--ink-2)}
+.intro-title{font-size:34px}
+.intro-blurb{margin:0;font-size:15px;max-width:58ch}
+.intro-notes{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.inote{display:grid;grid-template-columns:auto auto;align-items:center;gap:12px;min-width:170px;padding:12px 18px 12px 12px;border:2px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 4px 0 var(--line);text-align:left;cursor:pointer}
+.inote:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.inote.heard{border-color:var(--uc);box-shadow:0 4px 0 var(--uc-deep)}
+.inote .pl{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--uc);color:var(--on-u)}
+.inote .pl svg{width:16px;height:16px}
+.inote b{display:block;font-family:var(--display);font-size:28px;line-height:1}
+.inote small{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.known{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13.5px;color:var(--ink-2)}
+.kchip{padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px;font-weight:600;cursor:pointer}
+.kchip:hover{border-color:var(--uc)}
+.stage{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:20px;padding-block:16px 22px}
+.listen-col{display:grid;justify-items:center;gap:8px}
+.listen{position:relative;display:grid;place-items:center;width:100px;height:100px;border:1px solid var(--line);border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--surface),var(--surface-2));color:var(--uc-text);cursor:pointer}
+.listen:hover{border-color:var(--uc)}
+.listen svg{width:40px;height:40px}
+.listen::before,.listen::after{content:"";position:absolute;inset:-1px;border:2px solid var(--uc);border-radius:50%;opacity:0;pointer-events:none}
+.listen.is-playing::before{animation:ring 1.6s ease-out infinite}
+.listen.is-playing::after{animation:ring 1.6s ease-out .8s infinite}
+@keyframes ring{from{transform:scale(1);opacity:.6}to{transform:scale(1.5);opacity:0}}
+.listen-label{font-size:12px;color:var(--ink-3);white-space:nowrap}
+.reveal{display:grid;align-content:center;gap:6px;min-height:118px;min-width:0}
+.reveal p{margin:0}
+.prompt{font-family:var(--display);font-size:26px;font-weight:600;line-height:1.15;text-wrap:balance}
+.sub{font-size:14px;color:var(--ink-2)}
+.big{font-family:var(--display);font-weight:700;font-size:58px;line-height:.95;letter-spacing:-.01em}
+.big .oct{margin-left:3px;font-size:.42em;color:var(--ink-2)}
+.hz{font-family:var(--mono);font-size:12.5px;color:var(--ink-2)}
+.piano{--bw:11.5%;position:relative;display:flex;gap:3px;height:176px;padding-top:9px}
+.piano::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;border-radius:3px;background:var(--felt)}
+.key{display:flex;align-items:flex-end;justify-content:center;border:0;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;transition:background-color .12s,transform .06s}
+.key .kl{pointer-events:none;white-space:nowrap}
+.key.white{flex:1 1 0;min-width:0;height:100%;padding:0 0 11px;border-radius:0 0 9px 9px;background:linear-gradient(to bottom,var(--key-white) 82%,var(--key-white-2));color:var(--key-white-ink);box-shadow:inset 0 0 0 1px var(--key-edge),0 2px 0 var(--key-edge);font-size:13px;font-weight:600}
+.key.black{position:absolute;top:9px;z-index:2;width:var(--bw);height:58%;padding:0 0 9px;border-radius:0 0 7px 7px;background:linear-gradient(to bottom,var(--key-black-top),var(--key-black) 35%);color:var(--key-black-ink);box-shadow:0 3px 0 rgba(0,0,0,.35);font-size:11px;font-weight:600}
+.piano.live .key.white:not(.off):hover{background:var(--uc-soft)}
+.piano.live .key.black:not(.off):hover{background:var(--key-black-hover)}
+.piano.live .key:not(.off):active{transform:translateY(1px)}
+.piano:not(.live) .key{cursor:default}
+.key.white.off{background:repeating-linear-gradient(135deg,var(--key-white) 0 7px,var(--key-white-2) 7px 9px);color:var(--key-off);cursor:not-allowed}
+.key.black.off{opacity:.4;cursor:not-allowed}
+.key.white.ok,.key.black.ok{background:var(--good);color:var(--on-good)}
+.key.white.ko,.key.black.ko{background:var(--bad);color:var(--on-bad)}
+.key:focus-visible{outline:2px solid var(--brass);outline-offset:-4px}
+.sheet{display:grid;gap:14px;margin-top:22px;padding:16px 18px;border-radius:16px}
+.sheet.good{background:var(--good-soft)}
+.sheet.bad{background:var(--bad-soft)}
+.sheet.quit{background:var(--surface-2)}
+.sheet-head{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px}
+.sheet-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%}
+.sheet-icon svg{width:22px;height:22px}
+.sheet.good .sheet-icon{background:var(--good);color:var(--on-good)}
+.sheet.bad .sheet-icon{background:var(--bad);color:var(--on-bad)}
+.sheet.quit .sheet-icon{background:var(--surface);color:var(--ink-2)}
+.sheet-title{margin:0;font-family:var(--display);font-size:24px;font-weight:700;line-height:1.1}
+.sheet.good .sheet-title{color:var(--good)}
+.sheet.bad .sheet-title{color:var(--bad)}
+.sheet-detail{margin:2px 0 0;font-size:14px}
+.sheet-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.sheet-actions:empty{display:none}
+.shortcuts{margin:16px 0 0;font-size:12px;color:var(--ink-3);text-align:center}
+@media (hover:none){.shortcuts,.kbd-hint{display:none!important}}
+
+/* Résultat */
+.res-title{margin:2px 0 0;font-family:var(--display);font-size:40px;font-weight:700;line-height:1.05;text-wrap:balance}
+.res-stars{margin-top:18px}
+.res-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0 0;padding-block:16px;border-block:1px solid var(--line)}
+.res-stats dt,.kpis dt{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2)}
+.res-stats dd{margin:4px 0 0;font-family:var(--mono);font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}
+.res-stats div:first-child dd{color:var(--flame)}
+.res-goal{display:grid;gap:8px;margin-top:18px}
+.res-goal-text,.res-note{margin:0;font-size:14.5px}
+.res-note{margin-top:14px;font-weight:500}
+.res-note:empty{display:none}
+.missed-wrap{display:grid;gap:8px;margin-top:18px}
+.missed{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{padding:4px 11px;border-radius:999px;background:var(--bad-soft);color:var(--bad);font-size:13px;font-weight:600}
+.mchip.okc{background:var(--good-soft);color:var(--good)}
+.actions{display:grid;gap:10px;margin-top:24px}
+
+/* Progrès */
+.progress{display:grid;gap:18px;min-width:0;container-type:inline-size}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px 16px;flex-wrap:wrap}
+.banner{margin:0;padding:10px 14px;border:1px dashed var(--brass);border-radius:12px;background:var(--brass-soft);font-size:14px}
+.summary{display:grid;gap:18px;padding:20px 22px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.verdict-top{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start}
+.v-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--surface-2);color:var(--ink)}
+.v-icon svg{width:24px;height:24px}
+.summary[data-state="up"] .v-icon{background:var(--good-soft);color:var(--good)}
+.summary[data-state="down"] .v-icon{background:var(--bad-soft);color:var(--bad)}
+.summary[data-state="wait"] .v-icon{background:var(--brass-soft);color:var(--brass)}
+.summary[data-state="up"] .v-word{color:var(--good)}
+.summary[data-state="down"] .v-word{color:var(--bad)}
+.v-word{margin:0;font-family:var(--display);font-weight:700;font-size:38px;line-height:1.05}
+.v-detail{margin:6px 0 0;font-size:15px;max-width:62ch}
+.v-tip{margin:8px 0 0;font-size:13.5px;color:var(--ink-2);max-width:62ch}
+.v-tip:empty{display:none}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;padding-top:16px;border-top:1px solid var(--line)}
+.kpis dd{margin:2px 0 0;font-family:var(--display);font-weight:700;font-size:30px;line-height:1.1;font-variant-numeric:lining-nums tabular-nums}
+.panel{padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.panel .caption{margin-top:6px}
+.caption.strong{margin-top:12px;color:var(--ink);font-weight:500}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@container (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
+@container (max-width:520px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.summary{padding:18px}}
+.chart{position:relative;height:236px;margin-top:12px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .gl{stroke:var(--line);stroke-width:1}
+.chart .ax{fill:var(--ink-3);font-family:var(--mono);font-size:11px}
+.chart .roll{fill:none;stroke:var(--brass);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.chart .dot{fill:var(--brass);fill-opacity:.4}
+.chart .last{fill:var(--brass);stroke:var(--surface);stroke-width:2.5}
+.chart .lastlab{fill:var(--ink);font-family:var(--mono);font-size:12px;font-weight:500}
+.chart .guide{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
+.chart .hit{fill:transparent;cursor:crosshair}
+.chart .empty{margin:0;padding-top:90px;text-align:center}
+.tip{position:absolute;z-index:3;padding:8px 11px;border-radius:9px;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;white-space:nowrap;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.tip b{font-weight:600}
+.cal-wrap{margin-top:14px;padding-bottom:4px;overflow-x:auto}
+.cal{display:grid;grid-template-columns:28px repeat(var(--weeks),13px);grid-template-rows:16px repeat(7,13px);gap:3px;width:max-content}
+.cal .m{grid-row:1;font-family:var(--mono);font-size:10.5px;line-height:14px;color:var(--ink-3);white-space:nowrap}
+.cal .dl{grid-column:1;font-family:var(--mono);font-size:10px;line-height:13px;color:var(--ink-3)}
+.cal .c{border-radius:3px;background:var(--surface-2)}
+.cal .c.l1{background:color-mix(in srgb,var(--flame) 25%,var(--surface-2))}
+.cal .c.l2{background:color-mix(in srgb,var(--flame) 50%,var(--surface-2))}
+.cal .c.l3{background:var(--flame)}
+.cal .c.l4{background:color-mix(in srgb,var(--flame) 70%,#000)}
+.cal .c.fut{background:transparent}
+.cal .c.today{outline:1.5px solid var(--ink-2);outline-offset:1px}
+.cal-legend{display:flex;align-items:center;gap:4px;margin-top:10px;font-size:11.5px;color:var(--ink-3)}
+.cal-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;background:var(--surface-2)}
+.cal-legend i.l1{background:color-mix(in srgb,var(--flame) 25%,var(--surface-2))}
+.cal-legend i.l2{background:color-mix(in srgb,var(--flame) 50%,var(--surface-2))}
+.cal-legend i.l3{background:var(--flame)}
+.cal-legend i.l4{background:color-mix(in srgb,var(--flame) 70%,#000)}
+.notes-list{display:grid;gap:7px;margin-top:12px}
+.nrow{display:grid;grid-template-columns:3.4em minmax(0,1fr) 3.6em 2.8em;align-items:center;gap:10px;font-size:13.5px}
+.nrow.head{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.nrow.head span:nth-child(3),.nrow.head span:nth-child(4){text-align:right}
+.nname{font-weight:600}
+.nbar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.nbar i{display:block;height:100%;border-radius:4px}
+.nbar i.good{background:var(--good)}
+.nbar i.mid{background:var(--brass)}
+.nbar i.weak{background:var(--bad)}
+.npct{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.ncount{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+.nrow.none{color:var(--ink-3)}
+.nrow.none .nname{font-weight:500}
+.conf{display:grid;margin-top:10px}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.crow:first-child{border-top:0}
+.cpair{font-weight:600;font-size:15px}
+.cpair .arrow{margin:0 5px;color:var(--ink-3);font-weight:400}
+.cint{grid-column:1;font-size:12.5px;color:var(--ink-2)}
+.ccount{grid-column:2;grid-row:1 / 3;font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+.empty{margin:10px 0 0;font-size:14px;color:var(--ink-2)}
+.table-wrap{margin-top:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font:inherit;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{padding:8px 10px;border-bottom:1px solid var(--line);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);text-align:left;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+th:first-child,td:first-child{padding-left:0}
+th:last-child,td:last-child{padding-right:0}
+.num{text-align:right;font-family:var(--mono)}
+.reset{display:flex;justify-content:flex-end}
+.reset-confirm{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px 10px;font-size:14px}
+
+/* Parcours : choix de la piste */
+.path-col{display:grid;gap:30px;width:100%;max-width:520px;margin:0 auto;min-width:0}
+.track-switch{display:grid;gap:8px}
+.track-switch .seg button{padding:8px 12px;font-size:14px;font-weight:600}
+.unit-flags{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px;max-width:112px}
+.unit-flags i{width:12px;height:18px;border-radius:2px 5px 5px 2px;box-shadow:0 0 0 1px rgba(0,0,0,.3)}
+.unit-flags i.new{box-shadow:0 0 0 2px var(--on-u)}
+
+/* Accords */
+.flag{display:inline-block;flex:none;width:18px;height:26px;border-radius:2px 6px 6px 2px;background:var(--fc,var(--ink-3));box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.chordpad{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ccard{display:flex;align-items:center;gap:12px;min-width:0;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 4px 0 var(--line);text-align:left;cursor:pointer;transition:border-color .12s,transform .06s}
+.ccard .ctext{min-width:0}
+.ccard b{display:block;font-size:15px;font-weight:600;white-space:nowrap}
+.ccard small{display:block;font-size:12px;color:var(--ink-2)}
+.chordpad.live .ccard:hover{border-color:var(--fc)}
+.chordpad.live .ccard:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.chordpad:not(.live) .ccard{cursor:default}
+.ccard.ok{border-color:var(--good);background:var(--good-soft)}
+.ccard.ko{border-color:var(--bad);background:var(--bad-soft)}
+.ccard:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.big.chord{display:flex;align-items:center;gap:14px;font-size:40px;line-height:1.05}
+.big.chord .flag{width:22px;height:32px}
+.nrow.wide{grid-template-columns:8.4em minmax(0,1fr) 3.6em 2.8em}
+.nname .flag,.cpair .flag,.kchip .flag,.mchip .flag{width:9px;height:13px;margin-right:6px;vertical-align:-1px}
+.table-empty{color:var(--ink-2);white-space:normal}
+
+@media (max-width:420px){
+  .stage{gap:14px}
+  .big.chord{font-size:30px}
+  .listen{width:84px;height:84px}
+  .listen svg{width:34px;height:34px}
+  .big{font-size:48px}
+  .prompt{font-size:22px}
+  .piano{height:160px}
+  .res-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .unit-title{font-size:24px}
+}
+@media (prefers-reduced-motion: reduce){
+  .listen.is-playing::before{animation:none;opacity:.7;transform:scale(1.08)}
+  .listen.is-playing::after{animation:none}
+  .bubble,.stars.lg svg{animation:none}
+  .key,.switch input,.switch input::after,.node,.goalbar i,.lbar i,.ring .rf{transition:none}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 24 36" aria-hidden="true"><path d="M5 2.5v12a7 7 0 0 0 14 0v-12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M12 21.5v12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+      <div>
+        <h1>Diapason</h1>
+        <p>Oreille absolue · <span class="mono" id="ref-note">La3 = 440 Hz</span></p>
+      </div>
+    </div>
+    <nav class="seg tabs" aria-label="Sections">
+      <button type="button" data-tab="path"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="5" r="2.3"/><circle cx="17" cy="12" r="2.3"/><circle cx="7" cy="19" r="2.3"/><path d="M9 6.2l6 4.6M15 13.2l-6 4.6"/></svg>Parcours</button>
+      <button type="button" data-tab="stats"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h16M7 16v-5M12 16V6M17 16v-3"/></svg>Progrès</button>
+      <button type="button" data-tab="free"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.5"/><circle cx="10" cy="17" r="2.5"/></svg>Libre</button>
+    </nav>
+    <div class="hstats">
+      <span class="pillstat" id="hdr-streak-pill" title="Jours d’affilée">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="flame" id="hdr-flame" d="M12.6 2.2c.5 3.1 3.3 4.9 4.6 7.6 1.8 3.8-.3 9.3-5.2 10.2-4.9-.6-7.3-5.4-5.7-9.3.6-1.5 1.6-2.4 2.3-3.5.2 1.6.9 2.7 2 3.3.5-2.8-.4-5.6 2-8.3z"/></svg>
+        <span id="hdr-streak">0</span>
+      </span>
+      <span class="pillstat" title="Objectif du jour">
+        <svg class="ring" viewBox="0 0 20 20" aria-hidden="true"><circle class="rb" cx="10" cy="10" r="7.5"/><circle class="rf" id="hdr-ring" cx="10" cy="10" r="7.5" style="stroke-dashoffset:47.12"/></svg>
+        <span id="hdr-xp">0/30 XP</span>
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Parcours -->
+    <div id="view-path" class="path-layout" hidden>
+      <div class="path-col">
+        <div class="track-switch">
+          <div class="seg full" role="group" aria-label="Parcours">
+            <button type="button" data-track="notes">Notes seules</button>
+            <button type="button" data-track="chords">Accords · Eguchi</button>
+          </div>
+          <p class="caption" id="track-intro"></p>
+          <button type="button" class="btn ghost sm m-review" id="btn-review-m">Révision ciblée</button>
+        </div>
+        <div class="path" id="path"></div>
+      </div>
+      <aside class="aside" aria-label="Objectif et révision">
+        <div class="acard goal-card">
+          <div class="acard-head">
+            <h3 class="h3">Objectif du jour</h3>
+            <button type="button" class="link" id="btn-goal-edit" aria-expanded="false" aria-controls="goal-seg">Modifier</button>
+          </div>
+          <div class="goal-row"><div class="goalbar"><i id="goal-fill"></i></div><span class="goal-num" id="goal-num"></span></div>
+          <p class="caption" id="goal-text"></p>
+          <div class="seg full small" id="goal-seg" role="group" aria-label="Objectif quotidien" hidden>
+            <button type="button" data-goal="15">15 XP<small>Détente</small></button>
+            <button type="button" data-goal="30">30 XP<small>Régulier</small></button>
+            <button type="button" data-goal="50">50 XP<small>Sérieux</small></button>
+            <button type="button" data-goal="80">80 XP<small>Intense</small></button>
+          </div>
+          <div class="week" id="week"></div>
+          <p class="streak-line" id="streak-line"></p>
+        </div>
+        <div class="acard review-card">
+          <h3 class="h3">Révision ciblée</h3>
+          <p class="caption" id="review-text">Les notes que tu rates le plus reviennent plus souvent. Ces séances ne comptent pas dans ta courbe de score.</p>
+          <div class="weak" id="weak"></div>
+          <button type="button" class="btn primary block" id="btn-review">Réviser · 12 notes</button>
+        </div>
+        <div class="acard prefs-card">
+          <h3 class="h3">Préférences</h3>
+          <div class="pref-row">
+            <span>Notation</span>
+            <div class="seg small" role="group" aria-label="Notation des notes">
+              <button type="button" data-notation="fr" aria-pressed="true">Do Ré Mi</button>
+              <button type="button" data-notation="en" aria-pressed="false">C D E</button>
+            </div>
+          </div>
+          <label class="switch"><input type="checkbox" id="opt-auto-path"><span class="t">Enchaîner après une bonne réponse</span></label>
+          <span class="store-note"></span>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Progrès -->
+    <div id="view-stats" class="progress" hidden>
+      <div class="sec-head">
+        <h2 class="h2">Ta progression</h2>
+        <div class="seg small" role="group" aria-label="Type d’exercice">
+          <button type="button" data-track="notes">Notes</button>
+          <button type="button" data-track="chords">Accords</button>
+        </div>
+      </div>
+      <span class="store-note"></span>
+      <p class="banner" id="sample-banner" hidden>Aperçu avec des séances d’exemple. Ta première séance enregistrée les remplacera.</p>
+
+      <div class="summary" id="verdict" data-state="wait">
+        <div class="verdict-top">
+          <span class="v-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path id="v-arrow" d="" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div>
+            <p class="v-word" id="verdict-word"></p>
+            <p class="v-detail" id="verdict-detail"></p>
+            <p class="v-tip" id="verdict-tip"></p>
+          </div>
+        </div>
+        <dl class="kpis">
+          <div><dt>XP gagnés</dt><dd id="kpi-xp"></dd></div>
+          <div><dt>Réponses</dt><dd id="kpi-notes"></dd></div>
+          <div><dt>Meilleure série</dt><dd id="kpi-best"></dd></div>
+          <div><dt>Temps récent</dt><dd id="kpi-time"></dd></div>
+        </dl>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3 class="h3">Évolution par séance</h3>
+          <div class="seg small" role="group" aria-label="Mesure affichée">
+            <button type="button" data-metric="score">Score</button>
+            <button type="button" data-metric="acc">Précision</button>
+            <button type="button" data-metric="time">Temps</button>
+          </div>
+        </div>
+        <div class="chart" id="chart"></div>
+        <p class="caption" id="chart-caption"></p>
+      </div>
+
+      <div class="panel">
+        <h3 class="h3">Calendrier</h3>
+        <p class="caption" id="cal-caption"></p>
+        <div class="cal-wrap" id="calendar"></div>
+        <div class="cal-legend" aria-hidden="true">Moins <i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> Plus · le 3<sup>e</sup> palier correspond à l’objectif du jour</div>
+      </div>
+
+      <div class="two">
+        <div class="panel">
+          <h3 class="h3" id="per-note-title">Réussite par note</h3>
+          <p class="caption" id="per-note-caption"></p>
+          <div class="notes-list" id="per-note"></div>
+          <p class="caption strong" id="weakest"></p>
+        </div>
+        <div class="panel">
+          <h3 class="h3">Confusions fréquentes</h3>
+          <p class="caption" id="conf-caption"></p>
+          <div class="conf" id="confusions"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 class="h3">Dernières séances</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Séance</th><th class="num">Score</th><th class="num">Précision</th><th class="num">Temps</th><th class="num">XP</th></tr></thead>
+            <tbody id="sessions-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="reset" id="reset-zone" hidden>
+        <button type="button" class="link" id="btn-reset">Effacer l’historique</button>
+        <div class="reset-confirm" id="reset-confirm" hidden>
+          <span id="reset-text"></span>
+          <button type="button" class="btn danger" id="reset-yes">Effacer</button>
+          <button type="button" class="btn ghost sm" id="reset-no">Annuler</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entraînement libre -->
+    <div id="view-free" hidden>
+      <section class="card free-card" aria-labelledby="free-title">
+        <div class="card-head">
+          <h2 class="h2" id="free-title">Entraînement libre</h2>
+          <p class="muted">Choisis toi-même les notes, le registre et le timbre. Ces séances comptent dans ta progression et ton objectif du jour.</p>
+        </div>
+        <div class="form">
+          <fieldset>
+            <legend>Notes à reconnaître</legend>
+            <div class="presets">
+              <button type="button" class="preset" data-preset="triad">Do Mi Sol</button>
+              <button type="button" class="preset" data-preset="white">Touches blanches</button>
+              <button type="button" class="preset" data-preset="all">Les 12 notes</button>
+            </div>
+            <div class="chips" id="chips"></div>
+            <p class="hint" id="notes-hint"></p>
+          </fieldset>
+          <fieldset>
+            <legend>Registre</legend>
+            <div class="seg full">
+              <label><input type="radio" name="range" value="1" id="range-1"><span>1 octave<small id="range-1-l"></small></span></label>
+              <label><input type="radio" name="range" value="2" id="range-2"><span>2 octaves<small id="range-2-l"></small></span></label>
+              <label><input type="radio" name="range" value="3" id="range-3"><span>3 octaves<small id="range-3-l"></small></span></label>
+              <label><input type="radio" name="range" value="5" id="range-5"><span>5 octaves<small id="range-5-l"></small></span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Timbre</legend>
+            <div class="seg full">
+              <label><input type="radio" name="timbre" value="piano" id="timbre-piano"><span>Piano</span></label>
+              <label><input type="radio" name="timbre" value="sine" id="timbre-sine"><span>Sinus</span></label>
+              <label><input type="radio" name="timbre" value="organ" id="timbre-organ"><span>Orgue</span></label>
+              <label><input type="radio" name="timbre" value="mix" id="timbre-mix"><span>Varié</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Notes par séance</legend>
+            <div class="seg full">
+              <label><input type="radio" name="length" value="10" id="length-10"><span>10</span></label>
+              <label><input type="radio" name="length" value="20" id="length-20"><span>20</span></label>
+              <label><input type="radio" name="length" value="40" id="length-40"><span>40</span></label>
+            </div>
+          </fieldset>
+          <div class="switches">
+            <label class="switch"><input type="checkbox" id="opt-scramble"><span class="t">Brouillage entre les notes</span><small>Quelques notes rapides au hasard effacent la note précédente de ta mémoire, pour que tu ne t’aides pas de l’intervalle.</small></label>
+            <label class="switch"><input type="checkbox" id="opt-auto"><span class="t">Enchaîner après une bonne réponse</span></label>
+          </div>
+          <p class="setup-msg" id="setup-msg" hidden></p>
+          <button type="button" class="btn primary block" id="btn-start">Commencer la séance</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Leçon -->
+    <section id="view-lesson" class="lesson card c1" hidden aria-labelledby="lesson-kicker">
+      <div class="lesson-top">
+        <button type="button" class="xbtn" id="btn-quit" aria-label="Quitter"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="lbar" aria-hidden="true"><i id="lbar-fill"></i></div>
+        <span class="combo" id="combo"></span>
+      </div>
+      <p class="lesson-kicker" id="lesson-kicker"></p>
+      <div class="intro" id="intro" hidden>
+        <p class="intro-heading" id="intro-heading"></p>
+        <h2 class="h2 intro-title" id="intro-title"></h2>
+        <p class="intro-blurb" id="intro-blurb"></p>
+        <div class="intro-notes" id="intro-notes"></div>
+        <div class="known" id="intro-known" hidden></div>
+        <button type="button" class="btn primary block" id="btn-intro-go">Commencer la leçon</button>
+      </div>
+      <div id="quiz" hidden>
+        <div class="stage">
+          <div class="listen-col">
+            <button type="button" class="listen" id="btn-listen" aria-label="Réécouter la note">
+              <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M7 19h7l10-8v26l-10-8H7z" fill="currentColor"/><path d="M30.5 17.5a9 9 0 0 1 0 13M35 13a15.5 15.5 0 0 1 0 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+            </button>
+            <span class="listen-label">Réécouter<span class="kbd-hint"> · Espace</span></span>
+          </div>
+          <div class="reveal" id="reveal" aria-live="polite"></div>
+        </div>
+        <div class="piano" id="piano" role="group" aria-label="Clavier de réponse"></div>
+        <div class="chordpad" id="chordpad" role="group" aria-label="Accords" hidden></div>
+      </div>
+      <div class="sheet" id="sheet" hidden aria-live="polite"></div>
+      <p class="shortcuts" id="shortcuts">Espace : réécouter · Entrée : continuer · Échap : quitter</p>
+    </section>
+
+    <!-- Résultat -->
+    <section id="view-result" class="result card c1" hidden aria-labelledby="res-title">
+      <p class="lesson-kicker" id="res-kicker"></p>
+      <h2 class="res-title" id="res-title"></h2>
+      <div class="res-stars" id="res-stars"></div>
+      <dl class="res-stats">
+        <div><dt>XP</dt><dd id="res-xp"></dd></div>
+        <div><dt>Score</dt><dd id="res-score"></dd></div>
+        <div><dt>Précision</dt><dd id="res-acc"></dd></div>
+        <div><dt>Temps moyen</dt><dd id="res-time"></dd></div>
+      </dl>
+      <div class="res-goal">
+        <div class="goal-row"><div class="goalbar"><i id="res-goal-fill"></i></div><span class="goal-num" id="res-goal-num"></span></div>
+        <p class="res-goal-text" id="res-goal-text"></p>
+      </div>
+      <p class="res-note" id="res-note"></p>
+      <div class="missed-wrap">
+        <h3 class="h3">À retravailler</h3>
+        <div class="missed" id="res-missed"></div>
+      </div>
+      <div class="actions" id="res-actions"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(async () => {
+  'use strict';
+
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+
+  /* ---------- Constantes musicales ---------- */
+  const NAMES = {
+    fr: ['Do', 'Do♯', 'Ré', 'Ré♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si'],
+    en: ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'],
+  };
+  const WHITE = [0, 2, 4, 5, 7, 9, 11];
+  const ALL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const BLACK = [[1, 0], [3, 1], [6, 3], [8, 4], [10, 5]]; // [classe de hauteur, touche blanche à sa gauche]
+  const RANGES = { 1: [60, 71], 2: [53, 76], 3: [48, 83], 5: [36, 95] }; // MIDI
+  const RANGE_LABEL = { 1: '1 octave', 2: '2 octaves', 3: '3 octaves', 5: '5 octaves' };
+  // Les 9 accords de la méthode Eguchi, dans l'ordre d'apprentissage (Sakakibara, 2014).
+  const CHORDS = [
+    { midis: [60, 64, 67], root: 0, inv: 0, flag: 'rouge' },
+    { midis: [60, 65, 69], root: 5, inv: 2, flag: 'jaune' },
+    { midis: [59, 62, 67], root: 7, inv: 1, flag: 'bleu' },
+    { midis: [57, 60, 65], root: 5, inv: 1, flag: 'noir' },
+    { midis: [62, 67, 71], root: 7, inv: 2, flag: 'vert' },
+    { midis: [64, 67, 72], root: 0, inv: 1, flag: 'orange' },
+    { midis: [65, 69, 72], root: 5, inv: 0, flag: 'violet' },
+    { midis: [55, 59, 62], root: 7, inv: 0, flag: 'rose' },
+    { midis: [55, 60, 64], root: 0, inv: 2, flag: 'marron' },
+  ];
+  const TIMBRE_LABEL = { piano: 'piano', sine: 'sinus', organ: 'orgue', mix: 'varié' };
+  const PRESETS = { triad: [0, 4, 7], white: WHITE.slice(), all: ALL.slice() };
+  const INTERVAL = ['unisson', '1 demi-ton', '1 ton', 'tierce mineure', 'tierce majeure', 'quarte'];
+  const PIANO_AMPS = [1, 0.62, 0.4, 0.28, 0.2, 0.14, 0.1, 0.07, 0.05, 0.035, 0.025, 0.018];
+  const MODES = ['lesson', 'exam', 'review', 'free'];
+  const GOALS = [15, 30, 50, 80];
+  const MIN_SAVE = 5;
+  const K_SETTINGS = 'diapason.settings.v1';
+  const K_LOCAL = 'diapason.sessions.v1';
+  const K_PENDING = 'diapason.pending.v1';
+
+  /* ---------- Stockage navigateur (toujours protégé) ---------- */
+  // Dans l'appli iOS/Android (Capacitor), le stockage natif double le localStorage,
+  // que le système peut vider : on le restaure au démarrage.
+  const nativePlugins = () => (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform() ? window.Capacitor.Plugins || null : null);
+  const prefs = () => { const p = nativePlugins(); return p && p.Preferences ? p.Preferences : null; };
+  const ls = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) {
+      const s = JSON.stringify(v);
+      try { localStorage.setItem(k, s); } catch (e) { /* stockage indisponible */ }
+      const P = prefs();
+      if (P) P.set({ key: k, value: s }).catch(() => {});
+    },
+    del(k) {
+      try { localStorage.removeItem(k); } catch (e) { /* stockage indisponible */ }
+      const P = prefs();
+      if (P) P.remove({ key: k }).catch(() => {});
+    },
+  };
+  async function restoreNative() {
+    const P = prefs();
+    if (!P) return;
+    for (const k of [K_SETTINGS, K_LOCAL]) {
+      try {
+        const r = await P.get({ key: k });
+        if (r && r.value != null) localStorage.setItem(k, r.value);
+      } catch (e) { /* on garde le localStorage */ }
+    }
+  }
+  await restoreNative();
+
+  const DEFAULTS = { notes: [0, 4, 7], range: 2, timbre: 'piano', length: 20, scramble: true, auto: true, notation: 'fr', metric: 'score', goal: 30, tab: 'path', track: 'notes' };
+  const settings = loadSettings();
+  function loadSettings() {
+    const s = Object.assign({}, DEFAULTS, ls.get(K_SETTINGS, {}) || {});
+    const notes = Array.isArray(s.notes) ? [...new Set(s.notes.filter((n) => Number.isInteger(n) && n >= 0 && n < 12))] : [];
+    s.notes = notes.length >= 2 ? notes.sort((a, b) => a - b) : DEFAULTS.notes.slice();
+    s.range = RANGES[s.range] ? Number(s.range) : DEFAULTS.range;
+    if (!TIMBRE_LABEL[s.timbre]) s.timbre = DEFAULTS.timbre;
+    if (![10, 20, 40].includes(s.length)) s.length = DEFAULTS.length;
+    if (!NAMES[s.notation]) s.notation = DEFAULTS.notation;
+    if (!['score', 'acc', 'time'].includes(s.metric)) s.metric = DEFAULTS.metric;
+    if (!GOALS.includes(s.goal)) s.goal = DEFAULTS.goal;
+    if (!['path', 'stats', 'free'].includes(s.tab)) s.tab = DEFAULTS.tab;
+    if (!['notes', 'chords'].includes(s.track)) s.track = DEFAULTS.track;
+    s.scramble = !!s.scramble;
+    s.auto = !!s.auto;
+    return s;
+  }
+  const saveSettings = () => ls.set(K_SETTINGS, settings);
+
+  /* ---------- Formats ---------- */
+  const pcName = (pc) => NAMES[settings.notation][pc];
+  // Numérotation française : Do3 = do central, La3 = 440 Hz.
+  const octaveOf = (midi) => Math.floor(midi / 12) - (settings.notation === 'fr' ? 2 : 1);
+  const noteName = (midi) => pcName(midi % 12) + octaveOf(midi);
+  const freq = (midi) => 440 * Math.pow(2, (midi - 69) / 12);
+  const nf1 = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const nf2 = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const nf0 = new Intl.NumberFormat('fr-FR');
+  const fmtHz = (f) => nf2.format(f) + ' Hz';
+  const fmtSec = (ms) => nf1.format(ms / 1000) + ' s';
+  const pct = (v) => Math.round(v) + ' %';
+  const signed = (v) => { const r = Math.round(v); return (r > 0 ? '+' : r < 0 ? '−' : '±') + Math.abs(r); };
+  const plural = (n, one, many) => (Math.abs(n) >= 2 ? many : one);
+  const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0);
+  const accOf = (s) => (100 * s.correct) / s.n;
+  // Score corrigé du hasard : 0 = réponses au hasard, 100 = sans faute.
+  const scoreOf = (s) => { const ch = 1 / s.k; return Math.max(0, Math.round(((s.correct / s.n - ch) / (1 - ch)) * 100)); };
+  const xpOf = (s) => (Number.isFinite(s.xp) ? s.xp : s.correct);
+  const dayKey = (ts) => { const d = new Date(ts); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); };
+  const sDay = (s) => dayKey(s.endedAt || s.startedAt);
+  const shortDate = (ts) => new Date(ts).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  const longDate = (d) => d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const timeOf = (ts) => new Date(ts).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const ariaName = (pc) => pcName(pc).replace('♯', ' dièse');
+  const sameSet = (a, b) => a.length === b.length && a.every((x) => b.includes(x));
+  const listNames = (pcs) => { const n = pcs.map(pcName); return n.length < 2 ? n.join('') : n.slice(0, -1).join(', ') + ' et ' + n[n.length - 1]; };
+  const reduceMotion = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function intervalText(t, a) {
+    const up = (a - t + 12) % 12;
+    if (up === 6) return 'à un triton';
+    return up < 6 ? INTERVAL[up] + ' au-dessus' : INTERVAL[12 - up] + ' en dessous';
+  }
+  const chordName = (i) => CHORDS[i].midis.map((m) => pcName(m % 12)).join(' ');
+  const chordHarm = (i) => { const c = CHORDS[i]; return pcName(c.root) + ' majeur' + (c.inv === 1 ? ', 1ᵉʳ renversement' : c.inv === 2 ? ', 2ᵉ renversement' : ''); };
+  const chordNotes = (midis) => midis.map(noteName).join(' · ');
+  const trackOf = (s) => (s && s.track === 'chords' ? 'chords' : 'notes');
+  const itemName = (track, i) => (track === 'chords' ? chordName(i) : pcName(i));
+  function flagEl(i) {
+    const f = el('span', 'flag');
+    f.style.setProperty('--fc', 'var(--f' + i + ')');
+    f.setAttribute('aria-hidden', 'true');
+    return f;
+  }
+  function nearestMidi(midi, pc) {
+    const base = midi - (midi % 12) + pc;
+    return [base - 12, base, base + 12].reduce((best, m) => (Math.abs(m - midi) < Math.abs(best - midi) ? m : best));
+  }
+
+  /* ---------- Icônes ---------- */
+  const ICONS = {
+    decouverte: '<path d="M4 10h4l5-4v12l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',
+    pratique: '<path d="M9 17V5l10-2v12"/><circle cx="6.5" cy="17" r="2.5" fill="currentColor"/><circle cx="16.5" cy="15" r="2.5" fill="currentColor"/>',
+    renfort: '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"/>',
+    examen: '<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7"/>',
+    lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    cross: '<path d="M6 6l12 12M18 6L6 18"/>',
+    pause: '<path d="M9 6v12M15 6v12"/>',
+  };
+  const svgIcon = (name) => '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' + ICONS[name] + '</svg>';
+  const PLAY_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>';
+  const STAR_PATH = 'M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.5l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z';
+  function starsEl(n, cls) {
+    const d = el('span', 'stars' + (cls ? ' ' + cls : ''));
+    d.setAttribute('role', 'img');
+    d.setAttribute('aria-label', n + ' ' + plural(n, 'étoile', 'étoiles') + ' sur 3');
+    d.innerHTML = [0, 1, 2].map((i) => '<svg viewBox="0 0 24 24" class="' + (i < n ? 'on' : 'off') + '" aria-hidden="true"><path d="' + STAR_PATH + '"/></svg>').join('');
+    return d;
+  }
+
+  /* ---------- Synthèse sonore ---------- */
+  let ctx = null, master = null, noiseBuf = null, voices = [];
+  function audio() {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      ctx = new AC();
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4;
+      comp.attack.value = 0.003; comp.release.value = 0.25;
+      master = ctx.createGain();
+      master.gain.value = 0.9;
+      master.connect(comp);
+      comp.connect(ctx.destination);
+    }
+    // iPhone en mode silencieux : sans ça, Safari coupe le son de l'appli.
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* non pris en charge */ }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+  // Petite vibration après chaque réponse (appli native, ou Android dans le navigateur).
+  function buzz(ok) {
+    try {
+      const p = nativePlugins();
+      if (p && p.Haptics) p.Haptics.notification({ type: ok ? 'SUCCESS' : 'ERROR' }).catch(() => {});
+      else if (navigator.vibrate) navigator.vibrate(ok ? 15 : [30, 50, 30]);
+    } catch (e) { /* pas de vibration */ }
+  }
+  function noise() {
+    if (!noiseBuf) {
+      noiseBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.2), ctx.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    return noiseBuf;
+  }
+  // Les graves paraissent plus faibles, les aigus plus présents : on compense un peu.
+  const loudness = (f) => Math.min(1.3, Math.max(0.65, Math.pow(300 / f, 0.2)));
+
+  function playTone(midi, when, opts) {
+    opts = opts || {};
+    const c = audio();
+    const f = freq(midi);
+    const timbre = opts.timbre || 'piano';
+    const dur = opts.dur || (timbre === 'piano' ? 2.4 : 1.5);
+    const t0 = c.currentTime + 0.03 + (when || 0);
+    const end = t0 + dur;
+    const vg = c.createGain();
+    vg.gain.value = (opts.level == null ? 1 : opts.level) * loudness(f);
+    vg.connect(master);
+    voices.push(vg);
+    const bright = Math.min(1, Math.pow(440 / f, 0.5));
+    const partial = (ratio, amp, attack, tau) => {
+      const pf = f * ratio;
+      if (pf > 14000 || amp < 0.0005) return;
+      const o = c.createOscillator();
+      o.frequency.value = pf;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(amp, t0 + attack);
+      if (tau) g.gain.setTargetAtTime(0, t0 + attack, tau);
+      g.gain.setTargetAtTime(0, end, 0.08);
+      o.connect(g);
+      g.connect(vg);
+      o.start(t0);
+      o.stop(end + 0.5);
+    };
+    if (timbre === 'piano') {
+      const B = 0.00008 * Math.pow(f / 110, 1.2); // inharmonicité des cordes
+      const tau = 1.5 * Math.pow(261.63 / f, 0.5);
+      PIANO_AMPS.forEach((a, i) => {
+        const n = i + 1;
+        partial(n * Math.sqrt(1 + B * n * n), 0.3 * a * Math.pow(bright, i * 0.6), 0.005, tau / (1 + 0.5 * i));
+      });
+      partial(1.0007, 0.1, 0.005, tau * 1.3); // deuxième corde, très légèrement désaccordée
+      const src = c.createBufferSource();
+      src.buffer = noise();
+      const bp = c.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = Math.min(6000, f * 3);
+      bp.Q.value = 0.8;
+      const ng = c.createGain();
+      ng.gain.setValueAtTime(0, t0);
+      ng.gain.linearRampToValueAtTime(0.05, t0 + 0.002);
+      ng.gain.setTargetAtTime(0, t0 + 0.002, 0.012);
+      src.connect(bp); bp.connect(ng); ng.connect(vg);
+      src.start(t0);
+      src.stop(t0 + 0.15);
+    } else if (timbre === 'organ') {
+      [[1, 1], [2, 0.6], [3, 0.32], [4, 0.24], [6, 0.12], [8, 0.08]].forEach(([r, a], i) => partial(r, 0.17 * a * Math.pow(bright, i * 0.5), 0.04, 0));
+    } else {
+      partial(1, 0.38, 0.025, 0);
+    }
+    return dur + 0.1;
+  }
+  function stopAll() {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    voices.forEach((g) => {
+      try { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.setTargetAtTime(0, t, 0.015); } catch (e) { /* voix déjà terminée */ }
+    });
+    voices = [];
+  }
+  // Brouillage : une courte rafale de notes au hasard pour effacer la mémoire de la note précédente.
+  function scramble() {
+    let t = 0;
+    for (let i = 0; i < 7; i++) {
+      playTone(40 + Math.floor(Math.random() * 50), t, { timbre: i % 2 ? 'sine' : 'piano', dur: 0.09, level: 0.45 });
+      t += 0.075;
+    }
+    return t + 0.4;
+  }
+  function playChord(midis, timbre) {
+    let d = 0;
+    midis.forEach((m) => { d = Math.max(d, playTone(m, 0, { timbre, level: 0.6 })); });
+    return d;
+  }
+  const playQuestion = (q) => (q.midis ? playChord(q.midis, q.timbre) : playTone(q.midi, 0, { timbre: q.timbre }));
+
+  /* ---------- Parcours ---------- */
+  const UNITS = [
+    { add: [0, 7], notes: [0, 7], blurb: (n) => 'Deux notes, jouées sur deux octaves : un ' + n(7) + ' peut sonner plus grave qu’un ' + n(0) + '. Fie-toi à leur couleur, pas à leur hauteur.' },
+    { add: [4], notes: [0, 4, 7], blurb: (n) => n(4) + ' complète l’accord de ' + n(0) + ' majeur.' },
+    { add: [9], notes: [0, 4, 7, 9], blurb: (n) => n(9) + ', la note du diapason, vibre à 440 Hz.' },
+    { add: [2], notes: [0, 2, 4, 7, 9], blurb: (n) => 'Avec ' + n(2) + ', tu as les cinq notes de la gamme pentatonique.' },
+    { add: [5, 11], notes: WHITE, blurb: (n) => 'Les sept touches blanches. Attention aux demi-tons ' + n(4) + '–' + n(5) + ' et ' + n(11) + '–' + n(0) + '.' },
+    { add: [6, 10], notes: [0, 2, 4, 5, 6, 7, 9, 10, 11], blurb: () => 'Tes premières touches noires.' },
+    { add: [1, 3, 8], notes: ALL, blurb: () => 'Les douze notes de la gamme chromatique.' },
+    { add: [], notes: ALL, range: 5, title: 'Cinq octaves', blurb: () => 'Les mêmes notes, du grave à l’aigu : la couleur d’une note ne dépend pas de sa hauteur.' },
+    { add: [], notes: ALL, range: 5, timbre: 'mix', title: 'Tous les timbres', blurb: () => 'Piano, orgue et son pur sur cinq octaves. La dernière étape.' },
+  ].map((u, i) => Object.assign({ track: 'notes', range: 2, timbre: 'piano', index: i, color: (i % 5) + 1 }, u, { items: u.notes }));
+
+  // Parcours accords : un nouvel accord par unité, reconnu comme une couleur.
+  const CHORD_UNITS = [[0, 1], [2], [3], [4], [5], [6], [7], [8]].map((add, i, all) => {
+    const items = all.slice(0, i + 1).flat();
+    const f = add[0];
+    return {
+      track: 'chords', index: i, add, items, range: 1, timbre: 'piano', color: 1,
+      style: { uc: 'var(--f' + f + ')', on: 'var(--on-f' + f + ')' },
+      kicker: add.map((c) => 'accord ' + CHORDS[c].flag).join(' et '),
+      blurb: () => (i === 0
+        ? 'Le point de départ de la méthode : deux accords, reconnus comme deux couleurs. Écoute le son d’ensemble, sans chercher les notes une par une.'
+        : 'Nouvel accord : ' + chordHarm(f) + '. Tu en connais maintenant ' + items.length + '.'),
+    };
+  });
+  const unitTitle = (u) => (u.track === 'chords' ? u.add.map(chordName).join(' et ') : u.title || listNames(u.add));
+
+  const KINDS = [
+    { kind: 'decouverte', label: 'Découverte', length: 8, scramble: false, focusNew: true, thresholds: [50, 75, 90] },
+    { kind: 'pratique', label: 'Pratique', length: 10, scramble: true, focusNew: false, thresholds: [50, 75, 90] },
+    { kind: 'renfort', label: 'Renforcement', length: 12, scramble: true, focusNew: true, thresholds: [50, 75, 90] },
+    { kind: 'examen', label: 'Examen', length: 15, scramble: true, focusNew: false, thresholds: [70, 85, 95] },
+  ];
+  // L'examen transpose les accords d'une octave : il faut reconnaître la couleur, pas la hauteur.
+  const CHORD_KINDS = [
+    { kind: 'decouverte', label: 'Découverte', length: 8, scramble: false, focusNew: true, thresholds: [50, 75, 90] },
+    { kind: 'pratique', label: 'Pratique', length: 12, scramble: true, focusNew: false, thresholds: [50, 75, 90] },
+    { kind: 'examen', label: 'Examen', length: 15, scramble: true, focusNew: false, shift: true, thresholds: [70, 85, 95] },
+  ];
+  const TRACKS = {
+    notes: { units: UNITS, kinds: KINDS, prefix: 'u', unitWord: 'notes' },
+    chords: { units: CHORD_UNITS, kinds: CHORD_KINDS, prefix: 'a', unitWord: 'accords' },
+  };
+  const LESSONS = { notes: [], chords: [] };
+  Object.keys(TRACKS).forEach((track) => {
+    const T = TRACKS[track];
+    T.units.forEach((u) => T.kinds.forEach((k, j) => LESSONS[track].push(Object.assign({ id: T.prefix + (u.index + 1) + '-' + k.kind, track, unit: u.index, pos: j, count: T.kinds.length }, k))));
+  });
+  const LESSON_BY_ID = Object.fromEntries(LESSONS.notes.concat(LESSONS.chords).map((L) => [L.id, L]));
+  const examId = (track, ui) => TRACKS[track].prefix + (ui + 1) + '-examen';
+
+  /* ---------- Sauvegarde de l'historique ---------- */
+  function cleanSession(s) {
+    if (!s || typeof s !== 'object' || typeof s.id !== 'string') return null;
+    const n = Number(s.n), correct = Number(s.correct), k = Number(s.k), startedAt = Number(s.startedAt);
+    if (!(n > 0) || !(k >= 2) || !Number.isFinite(correct) || !Number.isFinite(startedAt)) return null;
+    const trials = Array.isArray(s.trials)
+      ? s.trials.filter((x) => x && Number.isInteger(x.t) && Number.isInteger(x.a) && x.t >= 0 && x.t < 64 && x.a >= 0 && x.a < 64)
+      : [];
+    const out = Object.assign({}, s, {
+      n, correct, k, startedAt, trials,
+      track: trackOf(s),
+      endedAt: Number(s.endedAt) || startedAt,
+      avgMs: Number(s.avgMs) || 0,
+      range: RANGES[s.range] ? Number(s.range) : 1,
+      mode: MODES.includes(s.mode) ? s.mode : 'free',
+      xp: Number.isFinite(Number(s.xp)) && s.xp != null ? Number(s.xp) : correct,
+      stars: Math.max(0, Math.min(3, Number(s.stars) || 0)),
+      passed: !!s.passed,
+    });
+    if (!LESSON_BY_ID[out.lessonId]) delete out.lessonId;
+    return out;
+  }
+  const byStart = (a, b) => a.startedAt - b.startedAt;
+  function mergeById(...lists) {
+    const map = new Map();
+    lists.forEach((l) => l.forEach((s) => { if (s && !map.has(s.id)) map.set(s.id, s); }));
+    return [...map.values()].sort(byStart);
+  }
+
+  const store = {
+    mode: 'local',
+    col: null,
+    loadLocal() {
+      const all = ls.get(K_LOCAL, []);
+      return (Array.isArray(all) ? all : []).map(cleanSession).filter(Boolean).sort(byStart);
+    },
+    // Historique privé de chaque personne dans son compte, via la base de données de l'artefact.
+    async connect() {
+      const c = window.claude;
+      if (!c || typeof c.use !== 'function') return null;
+      let db, user;
+      try { [db, user] = await Promise.all([c.use('db'), c.use('user')]); } catch (e) { return null; }
+      if (!db || !user) return null;
+      let uid = null;
+      try { uid = await user.id(); } catch (e) { uid = null; }
+      if (!uid) return null;
+      let col, docs;
+      try {
+        col = db.doc('data/users/' + uid + '/profile').collection('sessions');
+        const snap = await col.orderBy('startedAt', 'asc').limit(1000).get();
+        docs = snap.docs.filter((d) => d.exists).map((d) => cleanSession(d.data())).filter(Boolean);
+      } catch (e) { return null; }
+      this.col = col;
+      this.mode = 'cloud';
+      // Envoie les séances restées dans ce navigateur.
+      const waiting = [...ls.get(K_LOCAL, []), ...ls.get(K_PENDING, [])].map(cleanSession).filter(Boolean);
+      const have = new Set(docs.map((d) => d.id));
+      for (const s of waiting) {
+        if (have.has(s.id)) continue;
+        try { await col.doc(s.id).set(s); docs.push(s); have.add(s.id); } catch (e) { /* reste en attente */ }
+      }
+      // Relit le navigateur : une séance a pu y être gardée pendant l'envoi.
+      const left = [...ls.get(K_LOCAL, []), ...ls.get(K_PENDING, [])].map(cleanSession).filter((s) => s && !have.has(s.id));
+      ls.del(K_LOCAL);
+      if (left.length) ls.set(K_PENDING, left); else ls.del(K_PENDING);
+      return mergeById(docs, left);
+    },
+    async add(doc) {
+      if (this.mode === 'cloud') {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try { await this.col.doc(doc.id).set(doc); return 'cloud'; } catch (e) {
+            if (!(e && e.code === 'unavailable') || attempt) break;
+            await new Promise((r) => setTimeout(r, 600 + Math.random() * 600));
+          }
+        }
+        const p = ls.get(K_PENDING, []);
+        p.push(doc);
+        ls.set(K_PENDING, p);
+        return 'pending';
+      }
+      const all = ls.get(K_LOCAL, []);
+      all.push(doc);
+      ls.set(K_LOCAL, all);
+      return 'local';
+    },
+    async clear(list) {
+      if (this.mode === 'cloud') {
+        for (const s of list) { try { await this.col.doc(s.id).delete(); } catch (e) { /* on continue */ } }
+      }
+      ls.del(K_LOCAL);
+      ls.del(K_PENDING);
+    },
+  };
+
+  let history = [];
+  let storeState = 'local';
+
+  /* ---------- Données d'exemple (onglet Progrès, tant qu'il n'y a pas de vraie séance) ---------- */
+  let SAMPLE = null;
+  function sampleHistory() {
+    let seed = 20260926;
+    const rnd = () => { seed = (seed * 48271) % 2147483647; return seed / 2147483647; };
+    const circ = (a, b) => { const d = Math.abs(a - b) % 12; return Math.min(d, 12 - d); };
+    const day = 864e5;
+    const base = new Date(); base.setHours(18, 0, 0, 0);
+    const offsets = [17, 16, 15, 13, 12, 11, 10, 8, 7, 6, 4, 3, 2, 1];
+    return offsets.map((off, i) => {
+      const notes = i < 6 ? PRESETS.triad : PRESETS.white;
+      const skill = i < 6 ? 0.3 + i * 0.1 : 0.28 + (i - 6) * 0.07;
+      const trials = [];
+      for (let j = 0; j < 20; j++) {
+        const t = notes[Math.floor(rnd() * notes.length)];
+        let a = t;
+        if (rnd() > skill) {
+          const others = notes.filter((x) => x !== t).sort((x, y) => circ(x, t) - circ(y, t));
+          a = rnd() < 0.3 ? t : others[Math.floor(Math.pow(rnd(), 2) * others.length)];
+        }
+        trials.push({ t, a, ms: Math.round(900 + rnd() * 1500 + Math.max(0, 1500 - i * 100)), m: 60 + t, r: 0 });
+      }
+      const correct = trials.filter((x) => x.t === x.a).length;
+      const startedAt = base.getTime() - off * day + Math.floor(rnd() * 3) * 3600e3;
+      return {
+        id: 'exemple-' + i, sample: true, mode: 'lesson', lessonId: i < 6 ? 'u2-pratique' : 'u5-pratique', unit: i < 6 ? 1 : 4,
+        startedAt, endedAt: startedAt + 300e3, k: notes.length, notes: notes.slice(), range: 1, timbre: 'piano', scramble: true,
+        n: 20, correct, avgMs: Math.round(mean(trials.map((x) => x.ms))), xp: correct + 5, trials,
+      };
+    });
+  }
+
+  /* ---------- Calculs dérivés de l'historique ---------- */
+  function pathState(track) {
+    const T = TRACKS[track];
+    const best = {};
+    history.forEach((s) => {
+      if (!s.lessonId || !LESSON_BY_ID[s.lessonId] || LESSON_BY_ID[s.lessonId].track !== track) return;
+      const b = best[s.lessonId] || (best[s.lessonId] = { score: 0, stars: 0, passed: false, attempts: 0 });
+      b.attempts++;
+      b.score = Math.max(b.score, scoreOf(s));
+      b.stars = Math.max(b.stars, s.stars || 0);
+      b.passed = b.passed || !!s.passed;
+    });
+    let jumpUnit = -1;
+    T.units.forEach((u, i) => { const b = best[examId(track, i)]; if (b && b.passed) jumpUnit = i; });
+    let chain = true;
+    let current = null;
+    const states = LESSONS[track].map((L) => {
+      const b = best[L.id] || null;
+      let state;
+      if (b && b.passed) state = 'done';
+      else if (L.unit <= jumpUnit) state = 'skipped';
+      else if (chain) state = 'open';
+      else state = 'locked';
+      chain = state === 'done' || state === 'skipped';
+      if (state === 'open' && !current) current = L.id;
+      return { L, best: b, state };
+    });
+    const cur = states.find((x) => x.L.id === current);
+    return { states, current, unitNow: cur ? cur.L.unit : T.units.length - 1 };
+  }
+  function dayXPMap(data) {
+    const m = new Map();
+    data.forEach((s) => { const k = sDay(s); m.set(k, (m.get(k) || 0) + xpOf(s)); });
+    return m;
+  }
+  const todayXP = () => dayXPMap(history).get(dayKey(Date.now())) || 0;
+  const practicedToday = () => history.some((s) => sDay(s) === dayKey(Date.now()));
+  function streakOf(data) {
+    const days = new Set(data.map(sDay));
+    const d = new Date();
+    if (!days.has(dayKey(d.getTime()))) d.setDate(d.getDate() - 1);
+    let n = 0;
+    while (days.has(dayKey(d.getTime()))) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function bestStreakOf(data) {
+    const days = [...new Set(data.map((s) => { const d = new Date(s.endedAt || s.startedAt); d.setHours(0, 0, 0, 0); return d.getTime(); }))].sort((a, b) => a - b);
+    let best = 0, run = 0, prev = null;
+    days.forEach((t) => { run = prev != null && Math.round((t - prev) / 864e5) === 1 ? run + 1 : 1; best = Math.max(best, run); prev = t; });
+    return best;
+  }
+  function recentTrials(data, n) {
+    const out = [];
+    for (let i = data.length - 1; i >= 0 && out.length < n; i--) {
+      const tr = data[i].trials || [];
+      for (let j = tr.length - 1; j >= 0 && out.length < n; j--) out.push(tr[j]);
+    }
+    return out;
+  }
+  function itemStats(track, items, n) {
+    const st = {};
+    items.forEach((i) => { st[i] = { n: 0, ok: 0 }; });
+    recentTrials(history.filter((s) => trackOf(s) === track), n).forEach((r) => { if (st[r.t]) { st[r.t].n++; if (r.a === r.t) st[r.t].ok++; } });
+    return st;
+  }
+  // Révision ciblée : plus une note (ou un accord) est ratée, plus elle revient.
+  function weakWeights(track, items) {
+    const st = itemStats(track, items, 200);
+    const w = {};
+    items.forEach((i) => { const x = st[i]; w[i] = 0.3 + 3 * ((x.n - x.ok + 1) / (x.n + 2)); });
+    return w;
+  }
+  function computeXP(doc) {
+    let xp = doc.correct;
+    if (doc.passed) xp += doc.mode === 'exam' ? 15 : 5;
+    if (doc.stars === 3) xp += 5;
+    if (doc.mode === 'review' && doc.n >= 10) xp += 5;
+    return xp;
+  }
+
+  /* ---------- Configurations de séance ---------- */
+  function introFor(u) {
+    if (u.track === 'chords') {
+      return {
+        heading: u.add.length > 1 ? 'Premiers accords' : 'Nouvel accord',
+        title: u.add.length > 1 ? 'Deux accords, deux couleurs' : 'Voici l’accord ' + CHORDS[u.add[0]].flag,
+        samples: u.add.map((c) => ({ chord: c })),
+        known: u.items.filter((c) => !u.add.includes(c)),
+      };
+    }
+    if (u.add.length) {
+      // Chaque nouvelle note dans toutes ses octaves : on entend qu'elle garde sa couleur, grave ou aiguë.
+      const [lo, hi] = RANGES[u.range];
+      const samples = [];
+      for (let m = lo; m <= hi; m++) if (u.add.includes(m % 12)) samples.push({ midi: m, timbre: u.timbre });
+      return {
+        heading: u.add.length > 1 ? 'Nouvelles notes' : 'Nouvelle note',
+        title: 'Voici ' + listNames(u.add),
+        samples,
+        known: u.notes.filter((pc) => !u.add.includes(pc)),
+      };
+    }
+    if (u.timbre !== 'mix') return { heading: 'Nouveau registre', title: 'La même note, cinq octaves', samples: [45, 57, 69, 81, 93].map((m) => ({ midi: m, timbre: 'piano' })), known: [] };
+    return { heading: 'Nouveaux timbres', title: 'La même note, trois timbres', samples: ['piano', 'organ', 'sine'].map((t) => ({ midi: 69, timbre: t })), known: [] };
+  }
+  function lessonConfig(L, opts) {
+    const u = TRACKS[L.track].units[L.unit];
+    let weights = null;
+    if (L.focusNew && u.add.length && u.add.length < u.items.length) {
+      const old = u.items.length - u.add.length;
+      weights = {};
+      u.items.forEach((i) => { weights[i] = u.add.includes(i) ? Math.max(1, old / u.add.length) : 1; });
+    }
+    return {
+      track: L.track, mode: L.kind === 'examen' ? 'exam' : 'lesson', lessonId: L.id, unit: L.unit, color: u.color, style: u.style || null,
+      kicker: (L.track === 'chords' ? 'Accords · ' : '') + 'Unité ' + (L.unit + 1) + ' · ' + (opts && opts.jump ? 'Test de passage' : L.label),
+      notes: u.items.slice(), range: u.range, timbre: u.timbre, length: L.length, scramble: L.scramble, shift: !!L.shift,
+      weights, thresholds: L.thresholds, intro: L.kind === 'decouverte' ? introFor(u) : null, jump: !!(opts && opts.jump),
+    };
+  }
+  function reviewConfig(track) {
+    const u = TRACKS[track].units[pathState(track).unitNow];
+    return {
+      track, mode: 'review', lessonId: null, unit: u.index, color: u.color, style: u.style || null,
+      kicker: (track === 'chords' ? 'Accords · ' : '') + 'Révision ciblée',
+      notes: u.items.slice(), range: u.range, timbre: u.timbre, length: 12, scramble: true, shift: track === 'chords',
+      weights: weakWeights(track, u.items), thresholds: null, intro: null, jump: false,
+    };
+  }
+  function freeConfig() {
+    return {
+      track: 'notes', mode: 'free', lessonId: null, unit: null, color: 1, style: null, kicker: 'Entraînement libre',
+      notes: settings.notes.slice().sort((a, b) => a - b), range: settings.range, timbre: settings.timbre,
+      length: settings.length, scramble: settings.scramble, shift: false, weights: null, thresholds: null, intro: null, jump: false,
+    };
+  }
+  const applyUnitStyle = (node, style) => {
+    node.style.removeProperty('--uc');
+    node.style.removeProperty('--on-u');
+    if (style) { node.style.setProperty('--uc', style.uc); node.style.setProperty('--on-u', style.on); }
+  };
+
+  /* ---------- Construction de l'interface ---------- */
+  const chipEls = [];
+  const keyEls = [];
+  function buildChips() {
+    const box = $('#chips');
+    for (let pc = 0; pc < 12; pc++) {
+      const b = el('button', 'chip');
+      b.type = 'button';
+      const wi = WHITE.indexOf(pc);
+      if (wi >= 0) {
+        b.classList.add('nat');
+        b.style.gridRow = '2';
+        b.style.gridColumn = (wi * 2 + 1) + ' / span 2';
+      } else {
+        const after = BLACK.find((x) => x[0] === pc)[1];
+        b.classList.add('acc');
+        b.style.gridRow = '1';
+        b.style.gridColumn = (after * 2 + 2) + ' / span 2';
+      }
+      b.addEventListener('click', () => toggleNote(pc));
+      chipEls[pc] = b;
+      box.appendChild(b);
+    }
+  }
+  function buildPiano() {
+    const box = $('#piano');
+    const make = (pc, kind) => {
+      const b = el('button', 'key ' + kind);
+      b.type = 'button';
+      b.appendChild(el('span', 'kl'));
+      b.addEventListener('click', () => answer(pc));
+      keyEls[pc] = b;
+      return b;
+    };
+    WHITE.forEach((pc) => box.appendChild(make(pc, 'white')));
+    BLACK.forEach(([pc, after]) => {
+      const k = make(pc, 'black');
+      k.style.left = 'calc(' + ((after + 1) * 100) / 7 + '% - var(--bw) / 2)';
+      box.appendChild(k);
+    });
+  }
+  function flagsRow(u) {
+    const d = el('span', 'unit-flags');
+    d.setAttribute('role', 'img');
+    d.setAttribute('aria-label', 'Accords de l’unité : ' + u.items.map(chordName).join(', '));
+    u.items.forEach((c) => {
+      const f = el('i', u.add.includes(c) ? 'new' : '');
+      f.style.background = 'var(--f' + c + ')';
+      d.appendChild(f);
+    });
+    return d;
+  }
+  function miniKeyboard(u) {
+    const W = 14, H = 44, BW = 9, BH = 27;
+    let s = '<svg viewBox="0 0 ' + 7 * W + ' ' + H + '" role="img" aria-label="Notes de l’unité : ' + listNames(u.notes) + '">';
+    WHITE.forEach((pc, i) => { s += '<rect class="mk-w" x="' + (i * W + 0.5) + '" y="0.5" width="' + (W - 1) + '" height="' + (H - 1) + '" rx="2"/>'; });
+    BLACK.forEach(([, after]) => { s += '<rect class="mk-b" x="' + ((after + 1) * W - BW / 2) + '" y="0" width="' + BW + '" height="' + BH + '" rx="1.5"/>'; });
+    u.notes.forEach((pc) => {
+      const wi = WHITE.indexOf(pc);
+      const isNew = u.add.includes(pc);
+      const x = wi >= 0 ? wi * W + W / 2 : (BLACK.find((b) => b[0] === pc)[1] + 1) * W;
+      const y = wi >= 0 ? H - 8 : BH - 6;
+      s += '<circle class="' + (isNew ? 'mk-new' : wi >= 0 ? 'mk-old-w' : 'mk-old-b') + '" cx="' + x + '" cy="' + y + '" r="' + (isNew ? 3.8 : 3) + '"/>';
+    });
+    const span = el('span', 'unit-kbd');
+    span.innerHTML = s + '</svg>';
+    return span;
+  }
+
+  /* ---------- Navigation ---------- */
+  const VIEWS = ['path', 'stats', 'free', 'lesson', 'result'];
+  function showView(name) {
+    VIEWS.forEach((v) => { $('#view-' + v).hidden = v !== name; });
+    document.body.classList.toggle('in-lesson', name === 'lesson' || name === 'result');
+  }
+  function showTab(name) {
+    settings.tab = name;
+    saveSettings();
+    $$('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === name)));
+    showView(name);
+    if (name === 'stats') renderStats();
+    if (name === 'path') { renderPath(); renderAside(); }
+    if (name === 'free') renderSetup();
+  }
+  function goPath() {
+    showTab('path');
+    requestAnimationFrame(() => scrollToCurrent(true));
+  }
+  function scrollToCurrent(smooth) {
+    const n = $('#path .node.current');
+    if (!n) return;
+    const r = n.getBoundingClientRect();
+    if (r.top < 90 || r.bottom > window.innerHeight - 60) n.scrollIntoView({ block: 'center', behavior: smooth && !reduceMotion() ? 'smooth' : 'auto' });
+  }
+
+  /* ---------- En-tête et colonne latérale ---------- */
+  function renderHeader() {
+    const st = streakOf(history);
+    $('#hdr-streak').textContent = String(st);
+    $('#hdr-flame').classList.toggle('on', practicedToday());
+    $('#hdr-streak-pill').title = st + ' ' + plural(st, 'jour', 'jours') + ' d’affilée';
+    const xp = todayXP(), g = settings.goal;
+    $('#hdr-xp').textContent = xp + '/' + g + ' XP';
+    $('#hdr-ring').style.strokeDashoffset = String(47.12 * (1 - Math.min(1, xp / g)));
+  }
+  function renderStoreNote() {
+    const map = {
+      loading: 'Chargement de ton historique…',
+      cloud: 'Enregistré dans ton compte, sur tous tes appareils',
+      pending: 'Dernière séance gardée ici, envoi au prochain chargement',
+      local: 'Enregistré sur cet appareil',
+    };
+    $$('.store-note').forEach((n) => { n.textContent = map[storeState] || map.local; n.className = 'store-note ' + storeState; });
+  }
+  function renderPrefs() {
+    $$('[data-notation]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.notation === settings.notation)));
+    $$('[data-track]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.track === settings.track)));
+    $('#opt-auto').checked = settings.auto;
+    $('#opt-auto-path').checked = settings.auto;
+    $('#opt-scramble').checked = settings.scramble;
+  }
+  function renderAside() {
+    const xp = todayXP(), g = settings.goal;
+    $('#goal-fill').style.width = Math.min(100, (100 * xp) / g) + '%';
+    $('#goal-num').textContent = xp + ' / ' + g + ' XP';
+    const lessonsLeft = Math.max(1, Math.round((g - xp) / 12));
+    $('#goal-text').textContent = xp >= g ? 'Objectif atteint pour aujourd’hui.' : 'Encore ' + (g - xp) + ' XP, environ ' + lessonsLeft + ' ' + plural(lessonsLeft, 'leçon', 'leçons') + '.';
+    $$('[data-goal]').forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.goal) === g)));
+
+    const week = $('#week');
+    week.textContent = '';
+    const map = dayXPMap(history);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].forEach((lab, i) => {
+      const d = new Date(monday); d.setDate(monday.getDate() + i);
+      const x = map.get(dayKey(d.getTime())) || 0;
+      const cls = d > today ? 'future' : x >= g ? 'goal' : x > 0 ? 'practiced' : 'none';
+      const cell = el('span', 'wd ' + cls + (d.getTime() === today.getTime() ? ' today' : ''));
+      const dot = el('i');
+      if (cls === 'goal') dot.innerHTML = svgIcon('check');
+      cell.append(dot, el('span', '', lab));
+      cell.title = longDate(d) + (d > today ? '' : ' · ' + x + ' XP' + (x >= g ? ' · objectif atteint' : ''));
+      week.appendChild(cell);
+    });
+    const st = streakOf(history), best = bestStreakOf(history);
+    $('#streak-line').textContent = st
+      ? st + ' ' + plural(st, 'jour', 'jours') + ' d’affilée · record ' + best
+      : (history.length ? 'Entraîne-toi aujourd’hui pour relancer ta série.' : 'Termine une leçon pour lancer ta série.');
+
+    const track = settings.track;
+    const ps = pathState(track);
+    const u = TRACKS[track].units[ps.unitNow];
+    const any = ps.states.some((x) => x.state === 'done' || x.state === 'skipped');
+    const stats = itemStats(track, u.items, 200);
+    const weakList = u.items.filter((i) => stats[i].n >= 3)
+      .map((i) => ({ i, a: (100 * stats[i].ok) / stats[i].n }))
+      .sort((a, b) => a.a - b.a).slice(0, 3);
+    $('#review-text').textContent = (track === 'chords' ? 'Les accords que tu rates le plus reviennent plus souvent, à des octaves variées.' : 'Les notes que tu rates le plus reviennent plus souvent.')
+      + ' Ces séances ne comptent pas dans ta courbe de score.';
+    const weak = $('#weak');
+    weak.textContent = '';
+    if (!any) weak.appendChild(el('p', 'caption', 'Termine ta première leçon ' + (track === 'chords' ? 'd’accords ' : '') + 'pour débloquer la révision.'));
+    else if (!weakList.length) weak.appendChild(el('p', 'caption', 'Pas encore assez de réponses pour repérer tes points faibles.'));
+    else weakList.forEach((x) => weak.appendChild(el('span', 'wchip ' + (x.a >= 80 ? 'good' : x.a >= 50 ? 'mid' : 'weak'), itemName(track, x.i) + ' ' + pct(x.a))));
+    $('#btn-review').disabled = !any;
+    $('#btn-review-m').disabled = !any;
+    $('#btn-review').textContent = 'Réviser l’unité ' + (u.index + 1) + ' · 12 ' + TRACKS[track].unitWord;
+  }
+
+  /* ---------- Parcours ---------- */
+  let openNode = null;
+  const ZIG = [0, 46, 70, 46, 0, -46, -70, -46];
+  const TRACK_INTRO = {
+    notes: 'Reconnais chaque note seule. Elles sont jouées sur plusieurs octaves pour que la hauteur ne te donne pas la réponse.',
+    chords: 'Méthode de Kazuko Eguchi : on reconnaît des accords comme des couleurs, un nouvel accord par unité. Conçue pour les enfants de 2 à 6 ans, elle prépare ensuite à nommer les notes seules.',
+  };
+  function renderPath() {
+    const track = settings.track;
+    const ps = pathState(track);
+    const box = $('#path');
+    const focusedId = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.id : null;
+    $('#track-intro').textContent = TRACK_INTRO[track];
+    box.textContent = '';
+    let gi = 0;
+    TRACKS[track].units.forEach((u) => {
+      const us = ps.states.filter((x) => x.L.unit === u.index);
+      const unitDone = us.every((x) => x.state === 'done' || x.state === 'skipped');
+      const sec = el('section', 'unit c' + u.color);
+      applyUnitStyle(sec, u.style);
+      sec.setAttribute('aria-label', 'Unité ' + (u.index + 1));
+      const head = el('div', 'unit-head');
+      const txt = el('div');
+      txt.append(
+        el('p', 'unit-kicker', 'Unité ' + (u.index + 1) + (u.kicker ? ' · ' + u.kicker : '') + (unitDone ? ' · terminée' : '')),
+        el('h3', 'unit-title', unitTitle(u)),
+        el('p', 'unit-blurb', u.blurb(pcName))
+      );
+      if (us[0].state === 'locked') {
+        const j = el('button', 'jump', 'Passer le test pour sauter ici');
+        j.type = 'button';
+        j.addEventListener('click', () => startLesson(lessonConfig(LESSON_BY_ID[examId(track, u.index)], { jump: true })));
+        txt.appendChild(j);
+      }
+      head.append(txt, track === 'chords' ? flagsRow(u) : miniKeyboard(u));
+      sec.appendChild(head);
+
+      const ol = el('ol', 'nodes');
+      us.forEach((x) => {
+        const L = x.L;
+        const li = el('li', 'node-row');
+        li.style.setProperty('--ox', String(ZIG[gi % ZIG.length]));
+        gi++;
+        const wrap = el('div', 'node-wrap');
+        const isCurrent = L.id === ps.current;
+        const btn = el('button', 'node ' + x.state + (L.kind === 'examen' ? ' exam' : '') + (isCurrent ? ' current' : ''));
+        btn.type = 'button';
+        btn.dataset.id = L.id;
+        const icon = x.state === 'locked' ? 'lock' : (x.state === 'done' || x.state === 'skipped') && L.kind !== 'examen' ? 'check' : L.kind;
+        btn.innerHTML = svgIcon(icon);
+        const stateText = x.state === 'done' ? 'réussie, ' + x.best.stars + ' ' + plural(x.best.stars, 'étoile', 'étoiles') + ' sur 3'
+          : x.state === 'skipped' ? 'validée par un test' : x.state === 'open' ? 'à faire' : 'verrouillée';
+        btn.setAttribute('aria-label', 'Unité ' + (u.index + 1) + ', ' + L.label + ' : ' + stateText);
+        btn.setAttribute('aria-expanded', String(openNode === L.id));
+        btn.addEventListener('click', (e) => { e.stopPropagation(); openNode = openNode === L.id ? null : L.id; renderPath(); });
+        if (isCurrent) wrap.appendChild(el('span', 'bubble', L.kind === 'examen' ? 'Examen' : 'Commencer'));
+        wrap.appendChild(btn);
+        if (x.state === 'done') wrap.appendChild(starsEl(x.best.stars));
+        li.appendChild(wrap);
+        if (openNode === L.id) li.appendChild(popover(x, u));
+        ol.appendChild(li);
+      });
+      sec.appendChild(ol);
+      box.appendChild(sec);
+    });
+    if (!ps.current) {
+      const end = el('div', 'path-end');
+      end.innerHTML = svgIcon('examen');
+      end.append(el('h3', 'h3', 'Parcours terminé'), el('p', '', track === 'chords'
+        ? 'Tu reconnais les neuf accords de la méthode. Passe au parcours Notes seules pour nommer chaque note isolée.'
+        : 'Garde ton oreille en forme avec la révision ciblée et l’entraînement libre, ou rejoue les leçons pour décrocher trois étoiles partout.'));
+      box.appendChild(end);
+    }
+    if (focusedId) { const f = box.querySelector('[data-id="' + focusedId + '"]'); if (f) f.focus({ preventScroll: true }); }
+  }
+  function popover(x, u) {
+    const L = x.L;
+    const locked = x.state === 'locked';
+    const p = el('div', 'pop' + (locked ? ' locked' : ''));
+    p.addEventListener('click', (e) => e.stopPropagation());
+    p.append(
+      el('p', 'pop-title', L.label),
+      el('p', 'pop-sub', 'Leçon ' + (L.pos + 1) + ' sur ' + L.count + ' · ' + L.length + ' ' + TRACKS[L.track].unitWord + ' · '
+        + (L.track === 'chords' ? (L.shift ? 'octaves variées' : 'octave fixe') : RANGE_LABEL[u.range]))
+    );
+    if (x.best && x.state === 'done') {
+      p.append(el('p', 'pop-sub', 'Meilleur score : ' + x.best.score), starsEl(x.best.stars));
+    } else if (x.state === 'skipped') {
+      p.append(el('p', 'pop-sub', 'Validée par un test de passage.'));
+    } else if (!locked) {
+      p.append(el('p', 'pop-sub', 'Score de ' + L.thresholds[0] + ' pour réussir · +' + (L.kind === 'examen' ? 15 : 5) + ' XP de bonus'));
+    }
+    const b = el('button', 'btn block');
+    b.type = 'button';
+    if (locked) {
+      p.append(el('p', 'pop-sub', 'Réussis la leçon précédente pour débloquer celle-ci.'));
+      b.textContent = 'Verrouillée';
+      b.disabled = true;
+    } else {
+      b.textContent = x.state === 'open' ? 'Commencer' : x.best && x.best.stars < 3 ? 'Rejouer pour plus d’étoiles' : 'Rejouer';
+      b.addEventListener('click', () => startLesson(lessonConfig(L)));
+    }
+    p.appendChild(b);
+    return p;
+  }
+
+  /* ---------- Entraînement libre : réglages ---------- */
+  function toggleNote(pc) {
+    const i = settings.notes.indexOf(pc);
+    if (i >= 0) settings.notes.splice(i, 1); else settings.notes.push(pc);
+    settings.notes.sort((a, b) => a - b);
+    saveSettings();
+    setupMsg('');
+    renderSetup();
+  }
+  function setupMsg(text) {
+    const m = $('#setup-msg');
+    m.textContent = text;
+    m.hidden = !text;
+  }
+  function renderSetup() {
+    chipEls.forEach((b, pc) => b.setAttribute('aria-pressed', String(settings.notes.includes(pc))));
+    $$('[data-preset]').forEach((b) => b.setAttribute('aria-pressed', String(sameSet(PRESETS[b.dataset.preset], settings.notes))));
+    const k = settings.notes.length;
+    const hint = $('#notes-hint');
+    hint.textContent = k < 2 ? 'Choisis au moins 2 notes.' : k + ' notes · une réponse au hasard serait juste ' + pct(100 / k) + ' du temps.';
+    hint.classList.toggle('warn', k < 2);
+    $('#btn-start').disabled = k < 2;
+    const pick = (name, value) => { const i = document.querySelector('input[name="' + name + '"][value="' + value + '"]'); if (i) i.checked = true; };
+    pick('range', settings.range);
+    pick('timbre', settings.timbre);
+    pick('length', settings.length);
+    renderPrefs();
+  }
+
+  /* ---------- Séance (leçon, examen, révision ou libre) ---------- */
+  let session = null;
+  let lastResult = null;
+  let timers = [];
+  let pulseTimer = 0;
+  const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+  const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+  const PRAISE = ['Bravo !', 'Exact !', 'Bien entendu !', 'Parfait !', 'Juste !'];
+
+  function startLesson(cfg) {
+    if (!cfg || cfg.notes.length < 2) return;
+    audio();
+    clearTimers();
+    stopAll();
+    openNode = null;
+    session = { cfg, trials: [], startedAt: Date.now(), cur: null, combo: 0, quit: false, phase: cfg.intro ? 'intro' : 'quiz', heard: new Set() };
+    $('#view-lesson').className = 'lesson card c' + cfg.color;
+    applyUnitStyle($('#view-lesson'), cfg.style);
+    showView('lesson');
+    window.scrollTo(0, 0);
+    if (session.phase === 'intro') renderPlay();
+    else nextQuestion();
+  }
+  function beginQuiz() {
+    if (!session || session.phase !== 'intro') return;
+    session.phase = 'quiz';
+    nextQuestion();
+  }
+  function pickNote(cfg) {
+    if (!cfg.weights) return cfg.notes[Math.floor(Math.random() * cfg.notes.length)];
+    const total = cfg.notes.reduce((a, pc) => a + (cfg.weights[pc] || 0), 0);
+    let r = Math.random() * total;
+    for (const pc of cfg.notes) { r -= cfg.weights[pc] || 0; if (r <= 0) return pc; }
+    return cfg.notes[cfg.notes.length - 1];
+  }
+  function makeQuestion() {
+    const cfg = session.cfg;
+    const pc = pickNote(cfg);
+    if (cfg.track === 'chords') {
+      const shift = cfg.shift ? [-12, 0, 12][Math.floor(Math.random() * 3)] : 0;
+      const midis = CHORDS[pc].midis.map((m) => m + shift);
+      return { midi: midis[0], midis, pc, timbre: 'piano', ready: false, t0: 0, answer: null, ms: 0, replays: 0 };
+    }
+    const [lo, hi] = RANGES[cfg.range];
+    const options = [];
+    for (let m = lo; m <= hi; m++) if (m % 12 === pc) options.push(m);
+    const midi = options[Math.floor(Math.random() * options.length)];
+    const timbre = cfg.timbre === 'mix' ? ['piano', 'sine', 'organ'][Math.floor(Math.random() * 3)] : cfg.timbre;
+    return { midi, pc, timbre, ready: false, t0: 0, answer: null, ms: 0, replays: 0 };
+  }
+  function nextQuestion() {
+    clearTimers();
+    stopAll();
+    session.cur = makeQuestion();
+    renderPlay();
+    let delay = 0.25;
+    if (session.cfg.scramble && session.trials.length > 0) delay = scramble() + 0.1;
+    later(() => playCurrent(true), delay * 1000);
+  }
+  function playCurrent(first) {
+    const s = session;
+    const cur = s && s.cur;
+    if (!cur || s.phase !== 'quiz' || (!first && !cur.ready)) return;
+    stopAll();
+    const dur = playQuestion(cur);
+    if (first) {
+      cur.ready = true;
+      cur.t0 = performance.now() + 30;
+      renderPlay();
+    } else if (cur.answer == null) {
+      cur.replays++;
+    }
+    pulse(dur);
+  }
+  function pulse(sec) {
+    const b = $('#btn-listen');
+    b.classList.add('is-playing');
+    clearTimeout(pulseTimer);
+    pulseTimer = setTimeout(() => b.classList.remove('is-playing'), sec * 1000);
+  }
+  function answer(pc) {
+    const s = session;
+    const cur = s && s.cur;
+    if (!cur || s.phase !== 'quiz' || s.quit || !cur.ready || cur.answer != null || !s.cfg.notes.includes(pc)) return;
+    cur.answer = pc;
+    cur.ms = Math.max(0, Math.round(performance.now() - cur.t0));
+    s.trials.push({ t: cur.pc, a: pc, ms: cur.ms, m: cur.midi, r: cur.replays });
+    const ok = pc === cur.pc;
+    s.combo = ok ? s.combo + 1 : 0;
+    buzz(ok);
+    renderPlay();
+    const cont = $('#btn-continue');
+    if (cont) cont.focus({ preventScroll: true });
+    if (ok && settings.auto) later(advance, 1200);
+  }
+  function advance() {
+    clearTimers();
+    const s = session;
+    if (!s || s.quit || !s.cur || s.cur.answer == null) return;
+    if (s.trials.length >= s.cfg.length) finish();
+    else nextQuestion();
+  }
+  function askQuit() {
+    if (!session) return;
+    clearTimers();
+    session.quit = true;
+    renderPlay();
+    const b = $('#btn-resume');
+    if (b) b.focus({ preventScroll: true });
+  }
+  function resume() {
+    if (!session) return;
+    session.quit = false;
+    renderPlay();
+    // Si on a quitté pendant le brouillage, la note n'a jamais été jouée : on la relance.
+    if (session.phase === 'quiz' && session.cur && !session.cur.ready) later(() => playCurrent(true), 250);
+  }
+  function abandon() {
+    const s = session;
+    if (!s) return;
+    session = null;
+    clearTimers();
+    stopAll();
+    if (s.cfg.mode === 'free') {
+      showTab('free');
+      setupMsg(s.trials.length ? 'Séance non enregistrée : il faut au moins ' + MIN_SAVE + ' réponses.' : '');
+    } else {
+      goPath();
+    }
+  }
+  const canSavePartial = (s) => (s.cfg.mode === 'free' || s.cfg.mode === 'review') && s.trials.length >= MIN_SAVE;
+
+  function finish() {
+    clearTimers();
+    const s = session;
+    if (!s) return;
+    const cfg = s.cfg;
+    const t = s.trials;
+    if (t.length < cfg.length && !canSavePartial(s)) { abandon(); return; }
+    session = null;
+    const correct = t.filter((x) => x.t === x.a).length;
+    const doc = {
+      id: 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      track: cfg.track, mode: cfg.mode, startedAt: s.startedAt, endedAt: Date.now(),
+      k: cfg.notes.length, notes: cfg.notes, range: cfg.range, timbre: cfg.timbre, scramble: cfg.scramble,
+      planned: cfg.length, n: t.length, correct,
+      avgMs: Math.round(mean(t.map((x) => Math.min(x.ms, 10000)))), // une pause ne fausse pas la moyenne
+      trials: t,
+    };
+    if (cfg.lessonId) doc.lessonId = cfg.lessonId;
+    if (cfg.unit != null) doc.unit = cfg.unit;
+    const score = scoreOf(doc);
+    if (cfg.thresholds) {
+      const th = cfg.thresholds;
+      doc.stars = score >= th[2] ? 3 : score >= th[1] ? 2 : score >= th[0] ? 1 : 0;
+      doc.passed = doc.stars > 0;
+      if (cfg.jump) doc.jump = true;
+    }
+    doc.xp = computeXP(doc);
+    const before = { ps: pathState(cfg.track), xp: todayXP(), practiced: practicedToday(), prevEval: history.filter((x) => x.mode !== 'review' && trackOf(x) === cfg.track).slice(-5) };
+    history = mergeById(history, [doc]);
+    const after = { ps: pathState(cfg.track), xp: todayXP(), streak: streakOf(history) };
+    lastResult = { doc, cfg, before, after };
+    renderHeader();
+    showView('result');
+    renderResult();
+    window.scrollTo(0, 0);
+    const first = $('#res-actions button');
+    if (first) first.focus({ preventScroll: true });
+    store.add(doc).then((where) => {
+      if (where === 'pending') { storeState = 'pending'; renderStoreNote(); }
+    });
+  }
+
+  function renderPlay() {
+    const s = session;
+    if (!s) return;
+    const cfg = s.cfg;
+    const cur = s.cur;
+    const answered = !!(cur && cur.answer != null);
+    $('#lesson-kicker').textContent = cfg.kicker;
+    $('#lbar-fill').style.width = (100 * s.trials.length) / cfg.length + '%';
+    $('#combo').textContent = s.combo >= 3 ? s.combo + ' d’affilée' : '';
+    $('#btn-quit').setAttribute('aria-label', cfg.mode === 'free' || cfg.mode === 'review' ? 'Terminer la séance' : 'Quitter la leçon');
+    $('#intro').hidden = s.phase !== 'intro';
+    $('#quiz').hidden = s.phase !== 'quiz';
+    $('#shortcuts').hidden = s.phase !== 'quiz';
+    if (s.phase === 'intro') { renderIntro(); renderSheet(); return; }
+
+    const chords = cfg.track === 'chords';
+    const live = !!(cur && cur.ready && !answered && !s.quit);
+    $('#piano').hidden = chords;
+    $('#chordpad').hidden = !chords;
+    if (chords) {
+      renderChordpad(live);
+    } else {
+      keyEls.forEach((b, pc) => {
+        const inSet = cfg.notes.includes(pc);
+        b.classList.toggle('off', !inSet);
+        b.disabled = !inSet;
+        b.classList.toggle('ok', answered && pc === cur.pc);
+        b.classList.toggle('ko', answered && pc === cur.answer && pc !== cur.pc);
+      });
+      $('#piano').classList.toggle('live', live);
+    }
+
+    const rv = $('#reveal');
+    rv.textContent = '';
+    if (!answered) {
+      const waiting = !cur || !cur.ready;
+      rv.append(
+        el('p', 'prompt', chords ? 'Quel est cet accord ?' : 'Quelle est cette note ?'),
+        el('p', 'sub', waiting ? (cfg.scramble && s.trials.length ? 'Brouillage…' : 'Écoute…') : chords ? 'Choisis sa couleur.' : 'Réponds sur le clavier.')
+      );
+    } else if (chords) {
+      const big = el('p', 'big chord');
+      big.append(flagEl(cur.pc), chordName(cur.pc));
+      rv.append(big, el('p', 'hz', chordNotes(cur.midis) + ' · accord ' + CHORDS[cur.pc].flag));
+    } else {
+      const big = el('p', 'big');
+      big.append(pcName(cur.pc), el('span', 'oct', String(octaveOf(cur.midi))));
+      rv.append(big, el('p', 'hz', fmtHz(freq(cur.midi)) + ' · ' + TIMBRE_LABEL[cur.timbre]));
+    }
+    renderSheet();
+  }
+  function renderChordpad(live) {
+    const s = session;
+    const cur = s.cur;
+    const answered = !!(cur && cur.answer != null);
+    const pad = $('#chordpad');
+    pad.textContent = '';
+    pad.classList.toggle('live', live);
+    s.cfg.notes.forEach((i) => {
+      const b = el('button', 'ccard');
+      b.type = 'button';
+      b.style.setProperty('--fc', 'var(--f' + i + ')');
+      if (answered && i === cur.pc) b.classList.add('ok');
+      if (answered && i === cur.answer && i !== cur.pc) b.classList.add('ko');
+      const t = el('span', 'ctext');
+      t.append(el('b', '', chordName(i)), el('small', '', CHORDS[i].flag));
+      b.append(el('span', 'flag'), t);
+      b.setAttribute('aria-label', 'Accord ' + CHORDS[i].flag + ' : ' + chordName(i));
+      b.addEventListener('click', () => answer(i));
+      pad.appendChild(b);
+    });
+  }
+  function renderSheet() {
+    const s = session;
+    const sh = $('#sheet');
+    sh.textContent = '';
+    const cur = s.cur;
+    const answered = s.phase === 'quiz' && !!(cur && cur.answer != null);
+    const head = el('div', 'sheet-head');
+    const icon = el('span', 'sheet-icon');
+    const txt = el('div');
+    const actions = el('div', 'sheet-actions');
+    const button = (label, cls, fn, id) => {
+      const b = el('button', 'btn ' + cls, label);
+      b.type = 'button';
+      if (id) b.id = id;
+      b.addEventListener('click', fn);
+      return b;
+    };
+    if (s.quit) {
+      const saves = canSavePartial(s);
+      const lessonLike = s.cfg.mode === 'lesson' || s.cfg.mode === 'exam';
+      sh.className = 'sheet quit';
+      icon.innerHTML = svgIcon('pause');
+      txt.append(
+        el('p', 'sheet-title', saves ? 'Terminer la séance ?' : lessonLike ? 'Quitter la leçon ?' : 'Quitter la séance ?'),
+        el('p', 'sheet-detail', saves ? 'Tes ' + s.trials.length + ' réponses seront enregistrées.'
+          : lessonLike ? 'Tes réponses de cette leçon ne seront pas enregistrées.'
+          : 'Il faut au moins ' + MIN_SAVE + ' réponses pour enregistrer une séance.')
+      );
+      actions.append(
+        button(saves ? 'Terminer' : 'Quitter', 'ghost', saves ? finish : abandon),
+        button('Reprendre', 'primary', resume, 'btn-resume')
+      );
+      head.append(icon, txt);
+      sh.append(head, actions);
+      sh.hidden = false;
+      return;
+    }
+    if (!answered) { sh.hidden = true; return; }
+    const ok = cur.answer === cur.pc;
+    const last = s.trials.length >= s.cfg.length;
+    sh.className = 'sheet ' + (ok ? 'good' : 'bad');
+    icon.innerHTML = svgIcon(ok ? 'check' : 'cross');
+    const chords = s.cfg.track === 'chords';
+    if (ok) {
+      txt.append(el('p', 'sheet-title', PRAISE[s.trials.length % PRAISE.length]), el('p', 'sheet-detail', (chords ? 'Accord ' + CHORDS[cur.pc].flag : noteName(cur.midi)) + ' · répondu en ' + fmtSec(cur.ms)));
+    } else if (chords) {
+      const shift = cur.midis[0] - CHORDS[cur.pc].midis[0];
+      const aMidis = CHORDS[cur.answer].midis.map((m) => m + shift);
+      txt.append(el('p', 'sheet-title', 'C’était l’accord ' + CHORDS[cur.pc].flag), el('p', 'sheet-detail', chordName(cur.pc) + '. Tu as répondu ' + CHORDS[cur.answer].flag + ' (' + chordName(cur.answer) + '). Compare les deux :'));
+      actions.append(
+        compareBtn(CHORDS[cur.pc].flag + ' joué', () => playChord(cur.midis, cur.timbre)),
+        compareBtn(CHORDS[cur.answer].flag + ' ta réponse', () => playChord(aMidis, cur.timbre))
+      );
+    } else {
+      txt.append(el('p', 'sheet-title', 'C’était ' + noteName(cur.midi)), el('p', 'sheet-detail', 'Tu as répondu ' + pcName(cur.answer) + ', ' + intervalText(cur.pc, cur.answer) + '. Compare les deux :'));
+      const aMidi = nearestMidi(cur.midi, cur.answer);
+      actions.append(
+        compareBtn(noteName(cur.midi) + ' jouée', () => playTone(cur.midi, 0, { timbre: cur.timbre })),
+        compareBtn(noteName(aMidi) + ' ta réponse', () => playTone(aMidi, 0, { timbre: cur.timbre }))
+      );
+    }
+    head.append(icon, txt);
+    const cont = button(last ? 'Voir le résultat' : 'Continuer', (ok ? 'good' : 'bad') + ' block', advance, 'btn-continue');
+    sh.append(head, actions, cont);
+    sh.hidden = false;
+  }
+  function compareBtn(label, play) {
+    const b = el('button', 'btn ghost sm');
+    b.type = 'button';
+    b.innerHTML = PLAY_SVG;
+    b.append(label);
+    b.setAttribute('aria-label', 'Écouter ' + label);
+    b.addEventListener('click', () => { stopAll(); pulse(play()); });
+    return b;
+  }
+  function renderIntro() {
+    const s = session;
+    const it = s.cfg.intro;
+    const chords = s.cfg.track === 'chords';
+    const u = TRACKS[s.cfg.track].units[s.cfg.unit];
+    $('#intro-heading').textContent = it.heading;
+    $('#intro-title').textContent = it.title;
+    $('#intro-blurb').textContent = u.blurb(pcName) + ' Écoute chaque son plusieurs fois et essaie de retenir sa couleur.';
+    const box = $('#intro-notes');
+    box.textContent = '';
+    const mixed = !chords && it.samples.some((x) => x.timbre !== it.samples[0].timbre);
+    it.samples.forEach((smp, i) => {
+      const b = el('button', 'inote' + (s.heard.has(i) ? ' heard' : ''));
+      b.type = 'button';
+      const pl = el('span', 'pl');
+      pl.innerHTML = PLAY_SVG;
+      const t = el('span');
+      let label, play;
+      if (chords) {
+        b.style.setProperty('--uc', 'var(--f' + smp.chord + ')');
+        b.style.setProperty('--on-u', 'var(--on-f' + smp.chord + ')');
+        label = 'accord ' + CHORDS[smp.chord].flag;
+        t.append(el('b', '', chordName(smp.chord)), el('small', '', label + ' · ' + chordHarm(smp.chord)));
+        play = () => playChord(CHORDS[smp.chord].midis, 'piano');
+      } else {
+        label = noteName(smp.midi) + (mixed ? ', ' + TIMBRE_LABEL[smp.timbre] : '');
+        t.append(el('b', '', noteName(smp.midi)), el('small', '', fmtHz(freq(smp.midi)) + (mixed ? ' · ' + TIMBRE_LABEL[smp.timbre] : '')));
+        play = () => playTone(smp.midi, 0, { timbre: smp.timbre });
+      }
+      b.append(pl, t);
+      b.setAttribute('aria-label', 'Écouter ' + label);
+      b.addEventListener('click', () => { s.heard.add(i); b.classList.add('heard'); stopAll(); play(); });
+      box.appendChild(b);
+    });
+    const kn = $('#intro-known');
+    kn.textContent = '';
+    kn.hidden = !it.known.length;
+    if (it.known.length) {
+      kn.appendChild(el('span', '', 'Tu connais déjà :'));
+      it.known.forEach((i) => {
+        const b = el('button', 'kchip');
+        b.type = 'button';
+        if (chords) {
+          b.append(flagEl(i), chordName(i));
+          b.setAttribute('aria-label', 'Écouter l’accord ' + CHORDS[i].flag);
+          b.addEventListener('click', () => { stopAll(); playChord(CHORDS[i].midis, 'piano'); });
+        } else {
+          b.textContent = pcName(i);
+          b.setAttribute('aria-label', 'Écouter ' + ariaName(i));
+          b.addEventListener('click', () => { stopAll(); playTone(60 + i, 0, { timbre: u.timbre }); });
+        }
+        kn.appendChild(b);
+      });
+    }
+  }
+
+  /* ---------- Résultat ---------- */
+  function renderResult() {
+    if (!lastResult) return;
+    const { doc, cfg, before, after } = lastResult;
+    $('#view-result').className = 'result card c' + cfg.color;
+    applyUnitStyle($('#view-result'), cfg.style);
+    const units = TRACKS[cfg.track].units;
+    const score = scoreOf(doc);
+    const graded = !!cfg.thresholds;
+    $('#res-kicker').textContent = cfg.kicker;
+    let title;
+    if (!graded) title = cfg.mode === 'review' ? 'Révision terminée' : 'Séance terminée';
+    else if (!doc.passed) title = 'Presque !';
+    else if (cfg.jump) title = 'Test réussi !';
+    else if (cfg.mode === 'exam') title = 'Examen réussi !';
+    else title = ['', 'Leçon réussie !', 'Très bien !', 'Parfait !'][doc.stars];
+    $('#res-title').textContent = title;
+    const stars = $('#res-stars');
+    stars.textContent = '';
+    stars.hidden = !graded;
+    if (graded) stars.appendChild(starsEl(doc.stars, 'lg'));
+    $('#res-xp').textContent = '+' + doc.xp;
+    $('#res-score').textContent = String(score);
+    $('#res-acc').textContent = pct(accOf(doc));
+    $('#res-time').textContent = fmtSec(doc.avgMs);
+
+    const g = settings.goal;
+    const fill = $('#res-goal-fill');
+    fill.style.transition = 'none';
+    fill.style.width = Math.min(100, (100 * before.xp) / g) + '%';
+    void fill.offsetWidth;
+    fill.style.transition = '';
+    requestAnimationFrame(() => { fill.style.width = Math.min(100, (100 * after.xp) / g) + '%'; });
+    $('#res-goal-num').textContent = after.xp + ' / ' + g + ' XP';
+    let gt = before.xp < g && after.xp >= g ? 'Objectif du jour atteint !'
+      : after.xp >= g ? 'Objectif du jour déjà atteint : le reste est du bonus.'
+      : 'Objectif du jour : encore ' + (g - after.xp) + ' XP.';
+    if (!before.practiced) gt += ' Série : ' + after.streak + ' ' + plural(after.streak, 'jour', 'jours') + ' d’affilée.';
+    $('#res-goal-text').textContent = gt;
+
+    let note = '';
+    if (graded && !doc.passed) {
+      note = 'Il faut un score de ' + cfg.thresholds[0] + ' pour réussir (ton score : ' + score + '). La suite se débloque dès que tu passes ce cap.';
+    } else if (graded && cfg.jump) {
+      note = cfg.unit + 1 < units.length
+        ? 'Unités 1 à ' + (cfg.unit + 1) + ' validées. Tu reprends le parcours à l’unité ' + (cfg.unit + 2) + '.'
+        : 'Tout le parcours est validé.';
+    } else if (graded) {
+      const newly = after.ps.states.filter((x, i) => before.ps.states[i].state === 'locked' && x.state !== 'locked');
+      if (newly.length) {
+        const nx = newly[0].L;
+        note = nx.unit !== cfg.unit
+          ? 'Unité ' + (nx.unit + 1) + ' débloquée : ' + unitTitle(units[nx.unit]) + '.'
+          : 'Leçon suivante débloquée : ' + nx.label + '.';
+      } else if (!after.ps.current && before.ps.current) {
+        note = 'Tu as terminé tout le parcours.';
+      }
+    } else if (cfg.mode === 'free') {
+      const p = before.prevEval;
+      if (p.length) {
+        const m = mean(p.map(scoreOf));
+        const d = score - m;
+        note = signed(d) + ' ' + plural(Math.round(d), 'point', 'points') + ' par rapport à la moyenne de tes ' + (p.length > 1 ? p.length + ' séances précédentes' : 'séance précédente') + ' (' + Math.round(m) + ').';
+      }
+    }
+    $('#res-note').textContent = note;
+
+    const miss = new Map();
+    doc.trials.forEach((x) => { if (x.t !== x.a) { const k = x.t * 12 + x.a; miss.set(k, (miss.get(k) || 0) + 1); } });
+    const box = $('#res-missed');
+    box.textContent = '';
+    if (!miss.size) box.appendChild(el('span', 'mchip okc', 'Sans faute'));
+    [...miss.entries()].sort((a, b) => b[1] - a[1]).forEach(([k, c]) => {
+      const t = Math.floor(k / 12), a = k % 12;
+      const label = cfg.track === 'chords' ? CHORDS[t].flag + ' → ' + CHORDS[a].flag : pcName(t) + ' → ' + pcName(a);
+      box.appendChild(el('span', 'mchip', label + (c > 1 ? ' ×' + c : '')));
+    });
+
+    const acts = $('#res-actions');
+    acts.textContent = '';
+    const btn = (label, cls, fn) => { const b = el('button', 'btn block ' + cls, label); b.type = 'button'; b.addEventListener('click', fn); acts.appendChild(b); };
+    const L = cfg.lessonId ? LESSON_BY_ID[cfg.lessonId] : null;
+    if (graded && !doc.passed) {
+      btn('Réessayer', 'primary', () => startLesson(lessonConfig(L, { jump: cfg.jump })));
+      btn('Retour au parcours', 'ghost', goPath);
+    } else if (graded) {
+      btn('Continuer', 'primary', goPath);
+      if (doc.stars < 3 && !cfg.jump) btn('Rejouer pour plus d’étoiles', 'ghost', () => startLesson(lessonConfig(L)));
+    } else if (cfg.mode === 'review') {
+      btn('Continuer', 'primary', goPath);
+      btn('Nouvelle révision', 'ghost', () => startLesson(reviewConfig(cfg.track)));
+    } else {
+      btn('Nouvelle séance, mêmes réglages', 'primary', () => startLesson(freeConfig()));
+      btn('Changer les réglages', 'ghost', () => showTab('free'));
+    }
+  }
+
+  /* ---------- Progrès ---------- */
+  function trendOf(data) {
+    const n = data.length;
+    if (n < 4) return { state: 'wait', need: 4 - n };
+    const w = Math.min(5, Math.floor(n / 2));
+    const recent = data.slice(-w), prev = data.slice(-2 * w, -w);
+    const r = mean(recent.map(scoreOf)), p = mean(prev.map(scoreOf));
+    const d = r - p;
+    const dt = mean(recent.map((s) => s.avgMs)) - mean(prev.map((s) => s.avgMs));
+    const harder = mean(recent.map((s) => s.k)) > mean(prev.map((s) => s.k)) + 0.4 || mean(recent.map((s) => s.range)) > mean(prev.map((s) => s.range)) + 0.4;
+    return { state: d >= 5 ? 'up' : d <= -5 ? 'down' : 'flat', w, r, p, d, dt, harder };
+  }
+  const ARROWS = {
+    up: 'M5 18 17 6M9 6h8v8',
+    down: 'M5 6l12 12M17 10v8H9',
+    flat: 'M4 12h15M14 7l5 5-5 5',
+    wait: 'M12 7v5l3 2M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z',
+  };
+  function sessionLabel(s) {
+    const L = s.lessonId ? LESSON_BY_ID[s.lessonId] : null;
+    const pre = trackOf(s) === 'chords' ? 'Accords · ' : '';
+    if (L) return pre + (s.jump ? 'test unité ' : 'U') + (L.unit + 1) + (s.jump ? '' : ' · ' + L.label);
+    if (s.mode === 'review') return pre + 'Révision';
+    return 'Libre · ' + s.k + ' notes';
+  }
+  function renderStats() {
+    const real = history.length > 0;
+    const all = real ? history.slice().sort(byStart) : (SAMPLE || (SAMPLE = sampleHistory()));
+    const track = settings.track;
+    const data = all.filter((s) => trackOf(s) === track);
+    const ev = data.filter((s) => s.mode !== 'review');
+    $('#sample-banner').hidden = real;
+    $('#reset-zone').hidden = !real;
+    renderStoreNote();
+    renderVerdict(ev, all);
+    renderMetricButtons();
+    renderChart(ev);
+    renderCalendar(all);
+    renderNotes(data, track);
+    renderConfusions(data, track);
+    renderTable(data);
+  }
+  function renderVerdict(ev, data) {
+    const t = trendOf(ev);
+    const WORDS = { up: 'En progrès', flat: 'Stable', down: 'En baisse', wait: 'Premiers pas' };
+    $('#verdict').dataset.state = t.state;
+    $('#v-arrow').setAttribute('d', ARROWS[t.state]);
+    $('#verdict-word').textContent = WORDS[t.state];
+    let detail;
+    if (t.state === 'wait') {
+      detail = 'Encore ' + t.need + ' ' + plural(t.need, 'séance', 'séances') + ' avant de pouvoir mesurer une tendance.';
+    } else {
+      const pts = Math.abs(Math.round(t.d));
+      detail = 'Score moyen de tes ' + t.w + ' dernières séances : ' + Math.round(t.r) + ', soit ' + signed(t.d) + ' ' + plural(pts, 'point', 'points') + ' par rapport aux ' + t.w + ' précédentes.';
+      if (Math.abs(t.dt) >= 150) detail += ' Tu réponds ' + fmtSec(Math.abs(t.dt)) + (t.dt < 0 ? ' plus vite.' : ' moins vite.');
+    }
+    $('#verdict-detail').textContent = detail;
+    const last3 = ev.slice(-3);
+    const steady = last3.length === 3 && last3.every((s) => s.mode === 'free' && s.k === last3[0].k && s.range === last3[0].range);
+    let tip = '';
+    if (t.state === 'down' && t.harder) tip = 'Tu viens de passer à une difficulté supérieure : une baisse passagère est normale.';
+    else if (steady && last3.every((s) => scoreOf(s) >= 80)) tip = 'Plus de 80 sur tes 3 dernières séances libres avec ce réglage : ajoute une note ou élargis le registre.';
+    else if (t.state === 'down') tip = 'Fais une révision ciblée : elle insiste sur les notes que tu rates le plus.';
+    else if (t.state === 'flat') tip = 'Un peu de pratique chaque jour compte plus que de longues séances espacées.';
+    else if (t.state === 'wait') tip = 'Suis le parcours : chaque leçon réussie débloque la suivante.';
+    $('#verdict-tip').textContent = tip;
+    $('#kpi-xp').textContent = nf0.format(data.reduce((a, s) => a + xpOf(s), 0));
+    $('#kpi-notes').textContent = nf0.format(data.reduce((a, s) => a + s.n, 0));
+    const best = bestStreakOf(data);
+    $('#kpi-best').textContent = best + ' ' + plural(best, 'jour', 'jours');
+    $('#kpi-time').textContent = ev.length ? fmtSec(mean(ev.slice(-5).map((s) => s.avgMs))) : '—';
+  }
+  function renderMetricButtons() {
+    $$('[data-metric]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.metric === settings.metric)));
+    const CAP = {
+      score: 'Score corrigé du hasard : 0 = réponses au hasard, 100 = sans faute. Il permet de comparer une séance à 3 notes et une séance à 12 notes. Le trait suit la moyenne des 5 dernières séances. Les révisions ciblées ne sont pas comptées.',
+      acc: 'Part de bonnes réponses. Elle dépend du nombre de notes : avec 3 notes, le hasard donne déjà 33 %.',
+      time: 'Temps moyen entre le début de la note et ta réponse. Plus il baisse, plus la reconnaissance devient immédiate.',
+    };
+    $('#chart-caption').textContent = CAP[settings.metric];
+  }
+
+  let lastChartData = null;
+  function renderChart(data) {
+    lastChartData = data;
+    const box = $('#chart');
+    if (!data.length) { box.innerHTML = '<p class="empty">Pas encore de séance à afficher.</p>'; return; }
+    const W = Math.max(260, Math.round(box.clientWidth || 600));
+    const H = 236, M = { l: 42, r: 16, t: 20, b: 30 };
+    const pts = data.slice(-60);
+    const metric = settings.metric;
+    const val = (s) => (metric === 'score' ? scoreOf(s) : metric === 'acc' ? accOf(s) : s.avgMs / 1000);
+    const fmtVal = (v) => (metric === 'time' ? nf1.format(v) + ' s' : metric === 'acc' ? pct(v) : String(Math.round(v)));
+    const vals = pts.map(val);
+    let yMax = 100, ticks = [0, 25, 50, 75, 100];
+    let fmtY = (v) => (metric === 'acc' ? v + ' %' : String(v));
+    if (metric === 'time') {
+      const top = Math.max(2, Math.ceil(Math.max.apply(null, vals)));
+      const step = top <= 4 ? 1 : top <= 8 ? 2 : 5;
+      yMax = Math.ceil(top / step) * step;
+      ticks = [];
+      for (let v = 0; v <= yMax; v += step) ticks.push(v);
+      fmtY = (v) => v + ' s';
+    }
+    const iw = W - M.l - M.r, ih = H - M.t - M.b;
+    const X = (i) => M.l + (pts.length > 1 ? (i * iw) / (pts.length - 1) : iw / 2);
+    const Y = (v) => M.t + ih - (Math.min(Math.max(v, 0), yMax) / yMax) * ih;
+    const roll = vals.map((_, i) => mean(vals.slice(Math.max(0, i - 4), i + 1)));
+    const f1 = (n) => n.toFixed(1);
+    const label = { score: 'Score', acc: 'Précision', time: 'Temps de réponse' }[metric] + ' par séance, de ' + fmtVal(vals[0]) + ' à ' + fmtVal(vals[vals.length - 1]);
+    let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="' + label + '">';
+    s += '<defs><linearGradient id="g-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--brass);stop-opacity:.22"/><stop offset="1" style="stop-color:var(--brass);stop-opacity:0"/></linearGradient></defs>';
+    ticks.forEach((t) => {
+      s += '<line class="gl" x1="' + M.l + '" x2="' + (W - M.r) + '" y1="' + f1(Y(t)) + '" y2="' + f1(Y(t)) + '"/>';
+      s += '<text class="ax" x="' + (M.l - 8) + '" y="' + f1(Y(t) + 4) + '" text-anchor="end">' + fmtY(t) + '</text>';
+    });
+    const nL = Math.min(pts.length, Math.max(2, Math.floor(iw / 86)));
+    const idxs = [...new Set(Array.from({ length: nL }, (_, k) => (nL === 1 ? 0 : Math.round((k * (pts.length - 1)) / (nL - 1)))))];
+    idxs.forEach((i) => {
+      const anchor = pts.length === 1 ? 'middle' : i === 0 ? 'start' : i === pts.length - 1 ? 'end' : 'middle';
+      s += '<text class="ax" x="' + f1(X(i)) + '" y="' + (H - 8) + '" text-anchor="' + anchor + '">' + shortDate(pts[i].startedAt) + '</text>';
+    });
+    if (pts.length > 1) {
+      const line = roll.map((v, i) => (i ? 'L' : 'M') + f1(X(i)) + ' ' + f1(Y(v))).join(' ');
+      s += '<path d="' + line + ' L' + f1(X(pts.length - 1)) + ' ' + f1(Y(0)) + ' L' + f1(X(0)) + ' ' + f1(Y(0)) + ' Z" fill="url(#g-area)"/>';
+      s += '<path class="roll" d="' + line + '"/>';
+    }
+    vals.forEach((v, i) => { s += '<circle class="dot" cx="' + f1(X(i)) + '" cy="' + f1(Y(v)) + '" r="3.2"/>'; });
+    const li = vals.length - 1;
+    s += '<circle class="last" cx="' + f1(X(li)) + '" cy="' + f1(Y(vals[li])) + '" r="5.5"/>';
+    s += '<text class="lastlab" x="' + f1(X(li) - (pts.length > 1 ? 10 : -10)) + '" y="' + f1(Y(vals[li]) - 10) + '" text-anchor="' + (pts.length > 1 ? 'end' : 'start') + '">' + fmtVal(vals[li]) + '</text>';
+    s += '<line class="guide" x1="0" x2="0" y1="' + M.t + '" y2="' + (M.t + ih) + '" visibility="hidden"/>';
+    const cw = pts.length > 1 ? iw / (pts.length - 1) : iw;
+    pts.forEach((_, i) => { s += '<rect class="hit" data-i="' + i + '" x="' + f1(X(i) - cw / 2) + '" y="' + M.t + '" width="' + f1(cw) + '" height="' + ih + '"/>'; });
+    s += '</svg><div class="tip" hidden></div>';
+    box.innerHTML = s;
+
+    const tip = box.querySelector('.tip');
+    const guide = box.querySelector('.guide');
+    const show = (i) => {
+      const p = pts[i];
+      tip.textContent = '';
+      const l1 = el('div');
+      l1.append(el('b', '', shortDate(p.startedAt) + ' · ' + timeOf(p.startedAt)));
+      tip.append(l1, el('div', '', sessionLabel(p)), el('div', '', 'Score ' + scoreOf(p) + ' · précision ' + pct(accOf(p))), el('div', '', p.k + ' notes · ' + fmtSec(p.avgMs) + ' en moyenne'));
+      tip.hidden = false;
+      const tw = tip.offsetWidth, th = tip.offsetHeight;
+      const left = Math.max(0, Math.min(W - tw, X(i) - tw / 2));
+      let top = Y(vals[i]) - th - 14;
+      if (top < 0) top = Y(vals[i]) + 14;
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+      guide.setAttribute('x1', f1(X(i)));
+      guide.setAttribute('x2', f1(X(i)));
+      guide.setAttribute('visibility', 'visible');
+    };
+    const hide = () => { tip.hidden = true; guide.setAttribute('visibility', 'hidden'); };
+    box.querySelectorAll('.hit').forEach((r) => r.addEventListener('pointerenter', () => show(+r.dataset.i)));
+    box.querySelector('svg').addEventListener('pointerleave', hide);
+  }
+  function renderCalendar(data) {
+    const map = dayXPMap(data), g = settings.goal;
+    const WEEKS = 26;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const start = new Date(today);
+    start.setDate(today.getDate() - ((today.getDay() + 6) % 7) - (WEEKS - 1) * 7);
+    const cal = el('div', 'cal');
+    cal.style.setProperty('--weeks', String(WEEKS));
+    ['lun', '', 'mer', '', 'ven', '', ''].forEach((lab, d) => {
+      if (!lab) return;
+      const x = el('span', 'dl', lab);
+      x.style.gridRow = String(d + 2);
+      cal.appendChild(x);
+    });
+    const months = [];
+    let lastMonth = -1;
+    for (let w = 0; w < WEEKS; w++) {
+      const ws = new Date(start); ws.setDate(start.getDate() + w * 7);
+      if (ws.getMonth() !== lastMonth) { lastMonth = ws.getMonth(); months.push([w, ws.toLocaleDateString('fr-FR', { month: 'short' })]); }
+      for (let d = 0; d < 7; d++) {
+        const day = new Date(ws); day.setDate(ws.getDate() + d);
+        const c = el('span', 'c');
+        c.style.gridColumn = String(w + 2);
+        c.style.gridRow = String(d + 2);
+        if (day > today) c.classList.add('fut');
+        else {
+          const x = map.get(dayKey(day.getTime())) || 0;
+          const lv = x === 0 ? 0 : x < g / 2 ? 1 : x < g ? 2 : x < 2 * g ? 3 : 4;
+          if (lv) c.classList.add('l' + lv);
+          if (day.getTime() === today.getTime()) c.classList.add('today');
+          c.title = longDate(day) + ' · ' + x + ' XP' + (x >= g ? ' · objectif atteint' : '');
+        }
+        cal.appendChild(c);
+      }
+    }
+    months.forEach(([w, text], i) => {
+      const next = months[i + 1];
+      if (next && next[0] - w < 3) return; // évite deux mois qui se chevauchent
+      if (w > WEEKS - 3) return;
+      const m = el('span', 'm', text);
+      m.style.gridColumn = (w + 2) + ' / span 4';
+      cal.appendChild(m);
+    });
+    const wrap = $('#calendar');
+    wrap.textContent = '';
+    wrap.appendChild(cal);
+    wrap.scrollLeft = wrap.scrollWidth;
+    let hit = 0;
+    for (let i = 0; i < 30; i++) { const d = new Date(today); d.setDate(today.getDate() - i); if ((map.get(dayKey(d.getTime())) || 0) >= g) hit++; }
+    const best = bestStreakOf(data);
+    $('#cal-caption').textContent = 'Objectif de ' + g + ' XP atteint ' + hit + ' ' + plural(hit, 'jour', 'jours') + ' sur les 30 derniers · meilleure série : ' + best + ' ' + plural(best, 'jour', 'jours') + '.';
+  }
+  function renderNotes(data, track) {
+    const chords = track === 'chords';
+    const rows = recentTrials(data, 300);
+    const st = Array.from({ length: chords ? CHORDS.length : 12 }, () => ({ n: 0, ok: 0 }));
+    rows.forEach((r) => { if (st[r.t]) { st[r.t].n++; if (r.a === r.t) st[r.t].ok++; } });
+    $('#per-note-title').textContent = chords ? 'Réussite par accord' : 'Réussite par note';
+    const box = $('#per-note');
+    box.textContent = '';
+    const head = el('div', 'nrow head' + (chords ? ' wide' : ''));
+    head.append(el('span', '', chords ? 'Accord' : 'Note'), el('span'), el('span', '', 'Juste'), el('span', '', chords ? 'Joué' : 'Jouée'));
+    box.appendChild(head);
+    let weakest = null;
+    st.forEach((x, pc) => {
+      const row = el('div', 'nrow' + (chords ? ' wide' : ''));
+      const bar = el('div', 'nbar');
+      const fill = el('i');
+      if (x.n) {
+        const a = (100 * x.ok) / x.n;
+        fill.style.width = Math.max(a, 2) + '%';
+        fill.className = a >= 80 ? 'good' : a >= 50 ? 'mid' : 'weak';
+        if (x.n >= 5 && (!weakest || a < weakest.a)) weakest = { pc, a };
+      } else {
+        row.classList.add('none');
+      }
+      bar.appendChild(fill);
+      const name = el('span', 'nname');
+      if (chords) name.append(flagEl(pc), chordName(pc)); else name.textContent = pcName(pc);
+      row.append(name, bar, el('span', 'npct', x.n ? pct((100 * x.ok) / x.n) : '—'), el('span', 'ncount', x.n ? String(x.n) : ''));
+      box.appendChild(row);
+    });
+    $('#per-note-caption').textContent = rows.length ? 'Sur tes ' + rows.length + ' dernières réponses.' : 'Pas encore de réponses.';
+    $('#weakest').textContent = weakest && weakest.a < 100
+      ? (chords ? 'Accord le plus fragile : ' + CHORDS[weakest.pc].flag + ', ' : 'Note la plus fragile : ') + itemName(track, weakest.pc) + ' (' + pct(weakest.a) + ').'
+      : '';
+  }
+  function renderConfusions(data, track) {
+    const chords = track === 'chords';
+    const rows = recentTrials(data, 300);
+    const wrong = rows.filter((r) => r.a !== r.t);
+    const box = $('#confusions');
+    box.textContent = '';
+    $('#conf-caption').textContent = rows.length ? wrong.length + ' ' + plural(wrong.length, 'erreur', 'erreurs') + ' sur tes ' + rows.length + ' dernières réponses.' : '';
+    if (!wrong.length) {
+      box.appendChild(el('p', 'empty', rows.length ? 'Aucune confusion pour l’instant.' : 'Pas encore de réponses.'));
+      return;
+    }
+    const map = new Map();
+    wrong.forEach((r) => { const k = r.t * 12 + r.a; map.set(k, (map.get(k) || 0) + 1); });
+    [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(([k, c]) => {
+      const t = Math.floor(k / 12), a = k % 12;
+      const row = el('div', 'crow');
+      const pair = el('span', 'cpair');
+      if (chords) pair.append(flagEl(t), chordName(t), el('span', 'arrow', '→'), flagEl(a), chordName(a));
+      else pair.append(pcName(t), el('span', 'arrow', '→'), pcName(a));
+      const detail = chords ? 'accord ' + CHORDS[t].flag + ' pris pour le ' + CHORDS[a].flag : pcName(t) + ' pris pour ' + pcName(a) + ', ' + intervalText(t, a);
+      row.append(pair, el('span', 'cint', detail), el('span', 'ccount', c + ' fois'));
+      box.appendChild(row);
+    });
+  }
+  function renderTable(data) {
+    const tb = $('#sessions-body');
+    tb.textContent = '';
+    if (!data.length) {
+      const tr = el('tr');
+      const td = el('td', 'table-empty', 'Pas encore de séance de ce type.');
+      td.colSpan = 6;
+      tr.appendChild(td);
+      tb.appendChild(tr);
+      return;
+    }
+    data.slice(-8).reverse().forEach((s) => {
+      const tr = el('tr');
+      tr.append(
+        el('td', '', shortDate(s.startedAt) + ' · ' + timeOf(s.startedAt)),
+        el('td', '', sessionLabel(s)),
+        el('td', 'num', String(scoreOf(s))),
+        el('td', 'num', pct(accOf(s))),
+        el('td', 'num', fmtSec(s.avgMs)),
+        el('td', 'num', '+' + xpOf(s))
+      );
+      tb.appendChild(tr);
+    });
+  }
+
+  /* ---------- Rendu global ---------- */
+  function renderAll() {
+    renderHeader();
+    renderPrefs();
+    renderStoreNote();
+    if (!$('#view-path').hidden) { renderPath(); renderAside(); }
+    if (!$('#view-stats').hidden) renderStats();
+    if (!$('#view-free').hidden) renderSetup();
+  }
+  function refreshLabels() {
+    $('#ref-note').textContent = noteName(69) + ' = 440 Hz';
+    chipEls.forEach((b, pc) => { b.textContent = pcName(pc); b.setAttribute('aria-label', ariaName(pc)); });
+    keyEls.forEach((b, pc) => { b.firstChild.textContent = pcName(pc); b.setAttribute('aria-label', ariaName(pc)); });
+    $('[data-preset="triad"]').textContent = PRESETS.triad.map(pcName).join(' ');
+    Object.keys(RANGES).forEach((r) => { $('#range-' + r + '-l').textContent = noteName(RANGES[r][0]) + '–' + noteName(RANGES[r][1]); });
+    renderAll();
+    if (session) renderPlay();
+    if (lastResult && !$('#view-result').hidden) renderResult();
+  }
+
+  /* ---------- Événements ---------- */
+  function bind() {
+    $$('[data-tab]').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
+    $$('[data-notation]').forEach((b) => b.addEventListener('click', () => { settings.notation = b.dataset.notation; saveSettings(); refreshLabels(); }));
+    $$('[data-preset]').forEach((b) => b.addEventListener('click', () => { settings.notes = PRESETS[b.dataset.preset].slice(); saveSettings(); setupMsg(''); renderSetup(); }));
+    $$('input[name="range"]').forEach((i) => i.addEventListener('change', () => { settings.range = Number(i.value); saveSettings(); }));
+    $$('input[name="timbre"]').forEach((i) => i.addEventListener('change', () => { settings.timbre = i.value; saveSettings(); }));
+    $$('input[name="length"]').forEach((i) => i.addEventListener('change', () => { settings.length = Number(i.value); saveSettings(); }));
+    $('#opt-scramble').addEventListener('change', (e) => { settings.scramble = e.target.checked; saveSettings(); });
+    ['#opt-auto', '#opt-auto-path'].forEach((id) => $(id).addEventListener('change', (e) => { settings.auto = e.target.checked; saveSettings(); renderPrefs(); }));
+    $('#btn-start').addEventListener('click', () => startLesson(freeConfig()));
+    ['#btn-review', '#btn-review-m'].forEach((id) => $(id).addEventListener('click', () => startLesson(reviewConfig(settings.track))));
+    $$('[data-track]').forEach((b) => b.addEventListener('click', () => {
+      if (settings.track === b.dataset.track) return;
+      settings.track = b.dataset.track;
+      saveSettings();
+      openNode = null;
+      renderAll();
+      if (!$('#view-path').hidden) requestAnimationFrame(() => scrollToCurrent(false));
+    }));
+    $('#btn-goal-edit').addEventListener('click', () => {
+      const seg = $('#goal-seg');
+      seg.hidden = !seg.hidden;
+      $('#btn-goal-edit').setAttribute('aria-expanded', String(!seg.hidden));
+      $('#btn-goal-edit').textContent = seg.hidden ? 'Modifier' : 'Fermer';
+    });
+    $$('[data-goal]').forEach((b) => b.addEventListener('click', () => { settings.goal = Number(b.dataset.goal); saveSettings(); renderHeader(); renderAside(); }));
+    $('#btn-listen').addEventListener('click', () => playCurrent(false));
+    $('#btn-intro-go').addEventListener('click', beginQuiz);
+    $('#btn-quit').addEventListener('click', () => { if (session && session.quit) resume(); else askQuit(); });
+    $$('[data-metric]').forEach((b) => b.addEventListener('click', () => {
+      settings.metric = b.dataset.metric;
+      saveSettings();
+      renderMetricButtons();
+      if (lastChartData) renderChart(lastChartData);
+    }));
+    $('#btn-reset').addEventListener('click', () => {
+      $('#reset-text').textContent = 'Effacer tes ' + history.length + ' ' + plural(history.length, 'séance', 'séances') + ' et ta progression dans le parcours ? C’est définitif.';
+      $('#btn-reset').hidden = true;
+      $('#reset-confirm').hidden = false;
+    });
+    $('#reset-no').addEventListener('click', () => { $('#reset-confirm').hidden = true; $('#btn-reset').hidden = false; });
+    $('#reset-yes').addEventListener('click', () => {
+      const list = history.slice();
+      history = [];
+      lastResult = null;
+      $('#reset-confirm').hidden = true;
+      $('#btn-reset').hidden = false;
+      renderAll();
+      store.clear(list);
+    });
+    document.addEventListener('click', (e) => {
+      if (openNode && !(e.target.closest && e.target.closest('.node-row'))) { openNode = null; renderPath(); }
+    });
+
+    const inLesson = () => session && !$('#view-lesson').hidden;
+    document.addEventListener('keydown', (e) => {
+      if (!inLesson() || e.ctrlKey || e.metaKey || e.altKey) return;
+      const s = session;
+      if (e.key === 'Escape') { e.preventDefault(); if (s.quit) resume(); else askQuit(); return; }
+      if (s.quit) return;
+      if ((e.code === 'Space' || e.key === ' ') && s.phase === 'quiz') {
+        e.preventDefault();
+        if (!e.repeat) playCurrent(false);
+      } else if (e.key === 'Enter') {
+        if (s.phase === 'intro' && !(e.target.closest && e.target.closest('.inote, .kchip'))) { e.preventDefault(); beginQuiz(); }
+        else if (s.phase === 'quiz' && s.cur && s.cur.answer != null) { e.preventDefault(); advance(); }
+      }
+    });
+    document.addEventListener('keyup', (e) => {
+      if (inLesson() && session.phase === 'quiz' && !session.quit && (e.code === 'Space' || e.key === ' ')) e.preventDefault();
+    });
+
+    if ('ResizeObserver' in window) {
+      let w = 0;
+      new ResizeObserver((entries) => {
+        const nw = Math.round(entries[0].contentRect.width);
+        if (nw && Math.abs(nw - w) > 2) { w = nw; if (lastChartData) renderChart(lastChartData); }
+      }).observe($('#chart'));
+    }
+  }
+
+  /* ---------- Démarrage ---------- */
+  buildChips();
+  buildPiano();
+  bind();
+  history = store.loadLocal();
+  const hasClaude = !!(window.claude && typeof window.claude.use === 'function');
+  storeState = hasClaude ? 'loading' : 'local';
+  showTab(settings.tab);
+  refreshLabels();
+  if (settings.tab === 'path') requestAnimationFrame(() => scrollToCurrent(false));
+  if (hasClaude) {
+    store.connect().then((res) => {
+      if (res) { history = mergeById(res, history); storeState = 'cloud'; }
+      else { storeState = 'local'; history = mergeById(store.loadLocal(), history); }
+      renderAll();
+      if (!session && !$('#view-path').hidden && window.scrollY < 10) requestAnimationFrame(() => scrollToCurrent(false));
+    });
+  }
+})();
+</script>

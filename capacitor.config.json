@@ -1,0 +1,12 @@
+{
+  "appId": "io.github.aurelzeb.diapason",
+  "appName": "Diapason",
+  "webDir": "www",
+  "backgroundColor": "#0D0F13",
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "initialViewportFitValueHint": "cover"
+    }
+  }
+}
