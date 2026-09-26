@@ -84,13 +84,10 @@ await cp(path.join(root, 'assets', 'icons'), path.join(www, 'icons'), { recursiv
 
 // Service worker : met en cache tous les fichiers pour un usage hors ligne.
 // Le nom du cache change à chaque contenu différent, ce qui force la mise à jour.
-const files = [];
-for (const dir of ['', 'fonts', 'icons']) {
-  for (const f of await readdir(path.join(www, dir))) {
-    if (dir === '' && (f === 'fonts' || f === 'icons')) continue;
-    files.push(dir ? `${dir}/${f}` : f);
-  }
-}
+const files = (await readdir(www, { recursive: true, withFileTypes: true }))
+  .filter((d) => d.isFile())
+  .map((d) => path.relative(www, path.join(d.parentPath ?? d.path, d.name)).split(path.sep).join('/'))
+  .sort();
 const hash = createHash('sha256');
 for (const f of files) hash.update(await readFile(path.join(www, f)));
 const version = `${pkg.version}-${hash.digest('hex').slice(0, 10)}`;
