@@ -53,6 +53,10 @@ La compilation iOS demande **un Mac avec Xcode**. Depuis Windows, on peut passer
 
 Identifiant de l’appli : `io.github.aurelzeb.diapason` (dans `capacitor.config.json`).
 
+## Licence
+
+© 2026 aurelzeb, tous droits réservés. Le code est visible, mais toute réutilisation, copie ou publication demande une autorisation écrite : voir [LICENSE](LICENSE). Les polices (SIL Open Font License) et Capacitor (MIT) gardent leur propre licence.
+
 ## Données
 
 - Dans l’appli native, l’historique est enregistré sur le téléphone (stockage natif Capacitor Preferences, doublé du stockage web).

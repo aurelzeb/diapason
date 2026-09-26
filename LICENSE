@@ -1,0 +1,31 @@
+Copyright © 2026 aurelzeb. Tous droits réservés.
+
+Ce dépôt est public pour pouvoir être consulté, mais son contenu n'est pas
+sous licence libre.
+
+Sans autorisation écrite préalable du titulaire des droits, il est interdit de
+copier, modifier, adapter, publier, distribuer, sous-licencier ou vendre tout ou
+partie de ce code, de ses ressources (icônes, textes, contenus pédagogiques) ou
+de l'application qui en est issue, y compris sur les boutiques d'applications.
+
+La consultation du code et sa duplication (« fork ») sur GitHub restent
+possibles dans le cadre des conditions d'utilisation de GitHub.
+
+Pour toute demande d'autorisation : ouvrir une issue sur
+https://github.com/aurelzeb/diapason
+
+Composants tiers, qui restent sous leur propre licence :
+- Polices Bodoni Moda, IBM Plex Mono et Schibsted Grotesk : SIL Open Font
+  License 1.1 (textes dans assets/fonts/licenses/) ;
+- Capacitor et ses plugins (dépendances npm) : licence MIT.
+
+---
+
+Copyright © 2026 aurelzeb. All rights reserved.
+
+This repository is publicly visible, but it is not open source. No permission
+is granted to copy, modify, publish, distribute, sublicense or sell any part of
+this code, its assets, or the application built from it without prior written
+permission from the copyright holder. Viewing and forking on GitHub remain
+subject to GitHub's Terms of Service. Third-party components listed above keep
+their own licenses.
