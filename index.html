@@ -291,7 +291,9 @@ legend{padding:0;margin-bottom:9px;font-size:11.5px;font-weight:600;letter-spaci
 .combo{min-width:5.5em;font-size:13px;font-weight:700;color:var(--flame);text-align:right;white-space:nowrap}
 .lesson-kicker{margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--uc-text)}
 .lesson-sub{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap}
-.lesson-sub .lesson-kicker{margin:0}
+.lesson-sub .lesson-kicker{margin:0;margin-right:auto}
+.unit-deg{max-width:9em;font-family:var(--display);font-size:20px;font-weight:700;line-height:1.15;text-align:right;opacity:.92}
+.chordpad.progs{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
 .scr-toggle{display:inline-flex;align-items:center;gap:8px;padding:5px 11px 5px 6px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer}
 .scr-toggle:hover{border-color:var(--ink-3);color:var(--ink)}
 .scr-knob{position:relative;width:28px;height:16px;border-radius:999px;background:var(--line);transition:background .15s}
@@ -550,8 +552,9 @@ th:last-child,td:last-child{padding-right:0}
       <div class="path-col">
         <div class="track-switch">
           <div class="seg full" role="group" aria-label="Parcours">
-            <button type="button" data-track="notes">Notes seules</button>
-            <button type="button" data-track="chords">Accords · Eguchi</button>
+            <button type="button" data-track="notes">Notes</button>
+            <button type="button" data-track="chords">Accords</button>
+            <button type="button" data-track="progs">Progressions</button>
           </div>
           <p class="caption" id="track-intro"></p>
           <div class="m-actions">
@@ -602,6 +605,7 @@ th:last-child,td:last-child{padding-right:0}
             </div>
           </div>
           <label class="switch"><input type="checkbox" id="opt-scramble-path"><span class="t">Brouillage entre les notes</span></label>
+          <label class="switch"><input type="checkbox" id="opt-arp-path"><span class="t">Accords joués en arpège</span></label>
           <label class="switch"><input type="checkbox" id="opt-auto-path"><span class="t">Enchaîner après une bonne réponse</span></label>
           <span class="store-note"></span>
         </div>
@@ -615,6 +619,7 @@ th:last-child,td:last-child{padding-right:0}
         <div class="seg small" role="group" aria-label="Type d’exercice">
           <button type="button" data-track="notes">Notes</button>
           <button type="button" data-track="chords">Accords</button>
+          <button type="button" data-track="progs">Progressions</button>
         </div>
       </div>
       <span class="store-note"></span>
@@ -757,6 +762,9 @@ th:last-child,td:last-child{padding-right:0}
         <button type="button" class="scr-toggle" id="btn-scramble" aria-pressed="true" title="Un son au hasard avant chaque question (touche B)">
           <span class="scr-knob" aria-hidden="true"></span><span>Brouillage</span>
         </button>
+        <button type="button" class="scr-toggle" id="btn-arp" aria-pressed="false" title="Jouer les notes de l’accord une à une (touche A)" hidden>
+          <span class="scr-knob" aria-hidden="true"></span><span>Arpège</span>
+        </button>
       </div>
       <div class="intro" id="intro" hidden>
         <p class="intro-heading" id="intro-heading"></p>
@@ -780,7 +788,7 @@ th:last-child,td:last-child{padding-right:0}
         <div class="chordpad" id="chordpad" role="group" aria-label="Accords" hidden></div>
       </div>
       <div class="sheet" id="sheet" hidden aria-live="polite"></div>
-      <p class="shortcuts" id="shortcuts">Espace : réécouter · Entrée : continuer · B : brouillage · Échap : quitter</p>
+      <p class="shortcuts" id="shortcuts">Espace : réécouter · Entrée : continuer · B : brouillage · A : arpège · Échap : quitter</p>
     </section>
 
     <!-- Résultat -->
@@ -832,17 +840,61 @@ th:last-child,td:last-child{padding-right:0}
   const RANGES = { 1: [60, 71], 2: [53, 76], 3: [48, 83], 5: [36, 95], 88: [21, 108] }; // MIDI ; 88 = clavier de piano entier
   const RANGE_LABEL = { 1: '1 octave', 2: '2 octaves', 3: '3 octaves', 5: '5 octaves', 88: 'clavier entier' };
   const TEST_LENGTH = 20;
-  // Les 9 accords de la méthode Eguchi, dans l'ordre d'apprentissage (Sakakibara, 2014).
+  // Qualités d'accord : intervalles depuis la fondamentale, nom français et chiffrage.
+  const QUAL = {
+    maj: { iv: [0, 4, 7], name: 'majeur', sym: '' },
+    min: { iv: [0, 3, 7], name: 'mineur', sym: 'm' },
+    dim: { iv: [0, 3, 6], name: 'diminué', sym: 'dim' },
+    aug: { iv: [0, 4, 8], name: 'augmenté', sym: 'aug' },
+    dom7: { iv: [0, 4, 7, 10], name: 'septième', sym: '7' },
+    maj7: { iv: [0, 4, 7, 11], name: 'septième majeure', sym: '7M' },
+    min7: { iv: [0, 3, 7, 10], name: 'mineur septième', sym: 'm7' },
+    hdim7: { iv: [0, 3, 6, 10], name: 'demi-diminué', sym: 'm7♭5' },
+    dim7: { iv: [0, 3, 6, 9], name: 'septième diminuée', sym: 'dim7' },
+    six: { iv: [0, 4, 7, 9], name: 'sixte', sym: '6' },
+  };
+  const eguchi = (midis, root, inv, flag, n) => ({ midis, root, q: 'maj', inv, flag, fc: 'var(--f' + n + ')', on: 'var(--on-f' + n + ')' });
+  const chord = (midis, root, q, fc, on, flats) => ({ midis, root, q, inv: 0, flag: '', fc, on: on || '#FFFFFF', flats: !!flats });
   const CHORDS = [
-    { midis: [60, 64, 67], root: 0, inv: 0, flag: 'rouge' },
-    { midis: [60, 65, 69], root: 5, inv: 2, flag: 'jaune' },
-    { midis: [59, 62, 67], root: 7, inv: 1, flag: 'bleu' },
-    { midis: [57, 60, 65], root: 5, inv: 1, flag: 'noir' },
-    { midis: [62, 67, 71], root: 7, inv: 2, flag: 'vert' },
-    { midis: [64, 67, 72], root: 0, inv: 1, flag: 'orange' },
-    { midis: [65, 69, 72], root: 5, inv: 0, flag: 'violet' },
-    { midis: [55, 59, 62], root: 7, inv: 0, flag: 'rose' },
-    { midis: [55, 60, 64], root: 0, inv: 2, flag: 'marron' },
+    // Les 9 accords de la méthode Eguchi, dans l'ordre d'apprentissage (Sakakibara, 2014).
+    eguchi([60, 64, 67], 0, 0, 'rouge', 0),
+    eguchi([60, 65, 69], 5, 2, 'jaune', 1),
+    eguchi([59, 62, 67], 7, 1, 'bleu', 2),
+    eguchi([57, 60, 65], 5, 1, 'noir', 3),
+    eguchi([62, 67, 71], 7, 2, 'vert', 4),
+    eguchi([64, 67, 72], 0, 1, 'orange', 5),
+    eguchi([65, 69, 72], 5, 0, 'violet', 6),
+    eguchi([55, 59, 62], 7, 0, 'rose', 7),
+    eguchi([55, 60, 64], 0, 2, 'marron', 8),
+    // Suite du parcours : autres qualités d'accord, sur les touches blanches autant que possible.
+    chord([62, 65, 69], 2, 'min', '#247A7A'), // 9  Ré mineur
+    chord([64, 67, 71], 4, 'min', '#4F7A2A'), // 10 Mi mineur
+    chord([57, 60, 64], 9, 'min', '#1F5F99'), // 11 La mineur
+    chord([59, 62, 65], 11, 'dim', '#5A6270'), // 12 Si diminué
+    chord([60, 64, 68], 0, 'aug', '#B0407A'), // 13 Do augmenté
+    chord([55, 59, 62, 65], 7, 'dom7', '#A0522D'), // 14 Sol 7
+    chord([60, 64, 67, 71], 0, 'maj7', '#1F6FAF'), // 15 Do 7M
+    chord([62, 65, 69, 72], 2, 'min7', '#1E6E5A'), // 16 Ré m7
+    chord([57, 60, 64, 67], 9, 'min7', '#7A3E9D'), // 17 La m7
+    chord([59, 62, 65, 69], 11, 'hdim7', '#5F7A3A'), // 18 Si m7♭5
+    chord([59, 62, 65, 68], 11, 'dim7', '#444B57', null, true), // 19 Si dim7 (Si Ré Fa La♭)
+    chord([60, 64, 67, 69], 0, 'six', '#C56A1E', '#1F1003'), // 20 Do 6
+  ];
+  // Progressions : degrés (demi-tons depuis la tonique, qualité, chiffrage romain).
+  const DEG = {
+    I: [0, 'maj', 'I'], ii: [2, 'min', 'ii'], iii: [4, 'min', 'iii'], IV: [5, 'maj', 'IV'], V: [7, 'maj', 'V'], V7: [7, 'dom7', 'V7'], vi: [9, 'min', 'vi'],
+    i: [0, 'min', 'i'], iv: [5, 'min', 'iv'], VI: [8, 'maj', 'VI'], VII: [10, 'maj', 'VII'],
+  };
+  const PROGS = [
+    { degs: ['I', 'IV', 'V', 'I'], nick: 'Cadence parfaite' },
+    { degs: ['I', 'V', 'vi', 'IV'], nick: 'La progression « pop »' },
+    { degs: ['ii', 'V7', 'I'], nick: 'Le II-V-I du jazz' },
+    { degs: ['I', 'vi', 'IV', 'V'], nick: 'Les années 50' },
+    { degs: ['vi', 'IV', 'I', 'V'], nick: 'Pop, départ mineur' },
+    { degs: ['I', 'vi', 'ii', 'V7'], nick: 'Turnaround' },
+    { degs: ['iii', 'vi', 'ii', 'V7', 'I'], nick: 'Cycle des quintes' },
+    { degs: ['i', 'iv', 'V', 'i'], nick: 'Cadence en mineur', minor: true },
+    { degs: ['i', 'VII', 'VI', 'V'], nick: 'Cadence andalouse', minor: true },
   ];
   const TIMBRE_LABEL = { piano: 'piano', sine: 'sinus', organ: 'orgue', mix: 'varié' };
   const PRESETS = { triad: [0, 4, 7], white: WHITE.slice(), all: ALL.slice() };
@@ -886,7 +938,7 @@ th:last-child,td:last-child{padding-right:0}
   }
   await restoreNative();
 
-  const DEFAULTS = { notes: [0, 4, 7], range: 2, timbre: 'piano', length: 20, scramble: true, auto: true, notation: 'fr', metric: 'score', goal: 30, tab: 'path', track: 'notes' };
+  const DEFAULTS = { notes: [0, 4, 7], range: 2, timbre: 'piano', length: 20, scramble: true, auto: true, notation: 'fr', metric: 'score', goal: 30, tab: 'path', track: 'notes', arpeggio: false };
   const settings = loadSettings();
   function loadSettings() {
     const s = Object.assign({}, DEFAULTS, ls.get(K_SETTINGS, {}) || {});
@@ -899,7 +951,8 @@ th:last-child,td:last-child{padding-right:0}
     if (!['score', 'acc', 'time'].includes(s.metric)) s.metric = DEFAULTS.metric;
     if (!GOALS.includes(s.goal)) s.goal = DEFAULTS.goal;
     if (!['path', 'stats', 'free'].includes(s.tab)) s.tab = DEFAULTS.tab;
-    if (!['notes', 'chords'].includes(s.track)) s.track = DEFAULTS.track;
+    if (!['notes', 'chords', 'progs'].includes(s.track)) s.track = DEFAULTS.track;
+    s.arpeggio = !!s.arpeggio;
     s.scramble = !!s.scramble;
     s.auto = !!s.auto;
     return s;
@@ -939,16 +992,71 @@ th:last-child,td:last-child{padding-right:0}
     if (up === 6) return 'à un triton';
     return up < 6 ? INTERVAL[up] + ' au-dessus' : INTERVAL[12 - up] + ' en dessous';
   }
+  // Noms en bémols, pour les tonalités et les accords qui s'écrivent ainsi (Si♭ majeur, Si dim7…).
+  const FLATS = {
+    fr: ['Do', 'Ré♭', 'Ré', 'Mi♭', 'Mi', 'Fa', 'Sol♭', 'Sol', 'La♭', 'La', 'Si♭', 'Si'],
+    en: ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'],
+  };
+  const pcNameFlat = (pc) => FLATS[settings.notation][pc];
   // chordName : les notes de l'accord (« Do Fa La ») ; chordLabel : son nom (« Fa majeur (2ᵉ renv.) »).
-  const chordName = (i) => CHORDS[i].midis.map((m) => pcName(m % 12)).join(' ');
-  const chordLabel = (i) => { const c = CHORDS[i]; return pcName(c.root) + ' majeur' + (c.inv === 1 ? ' (1ᵉʳ renv.)' : c.inv === 2 ? ' (2ᵉ renv.)' : ''); };
-  const chordHarm = (i) => { const c = CHORDS[i]; return pcName(c.root) + ' majeur' + (c.inv === 1 ? ', 1ᵉʳ renversement' : c.inv === 2 ? ', 2ᵉ renversement' : ''); };
+  const chordName = (i) => { const c = CHORDS[i]; return c.midis.map((m) => (c.flats ? pcNameFlat : pcName)(m % 12)).join(' '); };
+  const chordLabel = (i) => {
+    const c = CHORDS[i];
+    return pcName(c.root) + ' ' + QUAL[c.q].name + (c.inv === 1 ? ' (1ᵉʳ renv.)' : c.inv === 2 ? ' (2ᵉ renv.)' : '');
+  };
+  // Ligne secondaire : chiffrage, notes et couleur (« Sol 7 · Sol Si Ré Fa », « Do Fa La · jaune »).
+  const chordSub = (i) => {
+    const c = CHORDS[i];
+    const sym = QUAL[c.q].sym ? pcName(c.root) + ' ' + QUAL[c.q].sym + ' · ' : '';
+    return sym + chordName(i) + (c.flag ? ' · ' + c.flag : '');
+  };
   const chordNotes = (midis) => midis.map(noteName).join(' · ');
-  const trackOf = (s) => (s && s.track === 'chords' ? 'chords' : 'notes');
-  const itemName = (track, i) => (track === 'chords' ? chordLabel(i) : pcName(i));
+  // Progressions : chiffrage (« I – V – vi – IV ») et accords dans une tonalité donnée.
+  const FLAT_KEYS = new Set([1, 3, 5, 8, 10]);
+  const progLabel = (i) => PROGS[i].degs.map((d) => DEG[d][2]).join(' – ');
+  const progKeyName = (i, key) => {
+    const major = PROGS[i].minor ? (key + 3) % 12 : key;
+    const names = FLAT_KEYS.has(major) ? pcNameFlat : pcName;
+    return { names, label: names(key) + (PROGS[i].minor ? ' mineur' : ' majeur') };
+  };
+  const progChords = (i, key) => {
+    const { names } = progKeyName(i, key);
+    return PROGS[i].degs.map((d) => { const [off, q] = DEG[d]; return names((key + off) % 12) + (QUAL[q].sym ? ' ' + QUAL[q].sym : ''); }).join(' – ');
+  };
+  const progHomeKey = (i) => (PROGS[i].minor ? 9 : 0); // Do majeur, ou La mineur
+  // Voicing : basse sur la fondamentale, accord au-dessus enchaîné au plus près du précédent.
+  function voiceProgression(i, key) {
+    const out = [];
+    let prev = null;
+    PROGS[i].degs.forEach((d) => {
+      const [off, q] = DEG[d];
+      const root = (key + off) % 12;
+      const pcs = QUAL[q].iv.map((x) => (root + x) % 12);
+      let best = null;
+      for (let r = 0; r < pcs.length; r++) {
+        const rot = pcs.slice(r).concat(pcs.slice(0, r));
+        for (let base = 53; base <= 66; base++) {
+          if (base % 12 !== rot[0]) continue;
+          const v = [base];
+          for (let k = 1; k < rot.length; k++) { let m = v[k - 1] + 1; while (m % 12 !== rot[k]) m++; v.push(m); }
+          const cost = prev
+            ? v.reduce((a, m, k) => a + Math.abs(m - prev[Math.min(k, prev.length - 1)]), 0)
+            : Math.abs(v[0] - 60) + Math.abs(v[v.length - 1] - 68);
+          if (!best || cost < best.cost) best = { v, cost };
+        }
+      }
+      out.push([36 + root].concat(best.v));
+      prev = best.v;
+    });
+    return out;
+  }
+  const TRACK_IDS = ['notes', 'chords', 'progs'];
+  const trackOf = (s) => (s && TRACK_IDS.includes(s.track) ? s.track : 'notes');
+  const itemName = (track, i) => (track === 'chords' ? chordLabel(i) : track === 'progs' ? progLabel(i) : pcName(i));
+  const itemCount = (track) => (track === 'chords' ? CHORDS.length : track === 'progs' ? PROGS.length : 12);
   function flagEl(i) {
     const f = el('span', 'flag');
-    f.style.setProperty('--fc', 'var(--f' + i + ')');
+    f.style.setProperty('--fc', CHORDS[i].fc);
     f.setAttribute('aria-hidden', 'true');
     return f;
   }
@@ -1081,10 +1189,25 @@ th:last-child,td:last-child{padding-right:0}
     });
     voices = [];
   }
-  function playChord(midis, timbre) {
+  // Accord plaqué, ou arpégé (notes jouées une à une du grave à l'aigu) si l'option est active.
+  function playChord(midis, timbre, arp) {
+    const spread = arp == null ? settings.arpeggio : arp;
+    const notes = midis.slice().sort((a, b) => a - b);
     let d = 0;
-    midis.forEach((m) => { d = Math.max(d, playTone(m, 0, { timbre, level: 0.6 })); });
+    notes.forEach((m, k) => {
+      const when = spread ? k * 0.32 : 0;
+      d = Math.max(d, when + playTone(m, when, { timbre, level: spread ? 0.75 : 0.6 }));
+    });
     return d;
+  }
+  // Progression : un accord toutes les 0,9 s, le dernier tenu plus longtemps.
+  function playProgression(chords, timbre) {
+    const step = 0.9;
+    chords.forEach((c, j) => {
+      const last = j === chords.length - 1;
+      c.forEach((m) => playTone(m, j * step, { timbre, level: 0.5, dur: last ? 1.8 : step }));
+    });
+    return (chords.length - 1) * step + 1.9;
   }
   // Brouillage : un son au hasard, de la même durée et du même timbre que la question, joué juste avant.
   // La note précédente (dont on connaît la réponse) ne peut plus servir de repère, et celle-ci
@@ -1100,7 +1223,7 @@ th:last-child,td:last-child{padding-right:0}
     }
     return d + 0.5;
   }
-  const playQuestion = (q) => (q.midis ? playChord(q.midis, q.timbre) : playTone(q.midi, 0, { timbre: q.timbre }));
+  const playQuestion = (q) => (q.prog ? playProgression(q.prog, q.timbre) : q.midis ? playChord(q.midis, q.timbre) : playTone(q.midi, 0, { timbre: q.timbre }));
 
   /* ---------- Parcours ---------- */
   const UNITS = [
@@ -1115,20 +1238,54 @@ th:last-child,td:last-child{padding-right:0}
     { add: [], notes: ALL, range: 5, timbre: 'mix', title: 'Tous les timbres', blurb: () => 'Piano, orgue et son pur sur cinq octaves. La dernière étape.' },
   ].map((u, i) => Object.assign({ track: 'notes', range: 2, timbre: 'piano', index: i, color: (i % 5) + 1 }, u, { items: u.notes }));
 
-  // Parcours accords : un nouvel accord par unité, reconnu comme une couleur.
-  const CHORD_UNITS = [[0, 1], [2], [3], [4], [5], [6], [7], [8]].map((add, i, all) => {
+  // Parcours accords : d'abord la méthode Eguchi (un nouvel accord par unité, reconnu comme une couleur),
+  // puis les autres qualités d'accord, chacune comparée à des accords déjà connus.
+  const EGUCHI_UNITS = [[0, 1], [2], [3], [4], [5], [6], [7], [8]].map((add, i, all) => {
     const items = all.slice(0, i + 1).flat();
     const f = add[0];
     return {
-      track: 'chords', index: i, add, items, range: 1, timbre: 'piano', color: 1,
-      style: { uc: 'var(--f' + f + ')', on: 'var(--on-f' + f + ')' },
+      add, items,
       kicker: add.map((c) => 'accord ' + CHORDS[c].flag).join(' et '),
       blurb: () => (i === 0
-        ? 'Le point de départ de la méthode : deux accords, reconnus comme deux couleurs. Écoute le son d’ensemble, sans chercher les notes une par une.'
+        ? 'Le point de départ de la méthode Eguchi : deux accords, reconnus comme deux couleurs. Écoute le son d’ensemble, sans chercher les notes une par une.'
         : 'Ses notes : ' + chordName(f) + ', couleur ' + CHORDS[f].flag + '. Tu connais maintenant ' + items.length + ' accords.'),
     };
   });
-  const unitTitle = (u) => (u.track === 'chords' ? u.add.map(chordLabel).join(' et ') : u.title || listNames(u.add));
+  const QUALITY_UNITS = [
+    { title: 'Accords mineurs', kicker: 'mineur', add: [9, 10, 11], items: [0, 6, 7, 9, 10, 11],
+      blurb: () => 'La tierce descend d’un demi-ton et l’accord devient mineur, plus sombre. Compare-les aux accords majeurs que tu connais.' },
+    { title: 'Diminué et augmenté', kicker: 'diminué, augmenté', add: [12, 13], items: [0, 11, 12, 13],
+      blurb: (n) => 'Diminué : deux tierces mineures empilées (' + n(11) + ' ' + n(2) + ' ' + n(5) + '), tendu. Augmenté : deux tierces majeures (' + n(0) + ' ' + n(4) + ' ' + n(8) + '), en suspens.' },
+    { title: 'Accords de septième', kicker: 'septièmes', add: [14, 15, 16], items: [7, 14, 0, 15, 16],
+      blurb: () => 'Une quatrième note, la septième. La septième de dominante appelle une résolution, la septième majeure sonne douce, la mineur septième plus sombre.' },
+    { title: 'Septièmes mineures et diminuées', kicker: 'septièmes, suite', add: [17, 18, 19], items: [14, 17, 18, 19],
+      blurb: () => 'Trois couleurs proches : mineur septième, demi-diminué (m7♭5) et septième diminuée, la plus tendue.' },
+    { title: 'Accords de sixte', kicker: 'sixte', add: [20], items: [0, 20, 15, 17],
+      blurb: (n) => n(0) + ' 6 et ' + n(9) + ' m7 ont exactement les mêmes notes : seule la basse change. Écoute la note la plus grave.' },
+  ];
+  const CHORD_UNITS = EGUCHI_UNITS.concat(QUALITY_UNITS).map((u, i) => Object.assign({
+    track: 'chords', index: i, range: 1, timbre: 'piano', color: 1,
+    style: { uc: CHORDS[u.add[0]].fc, on: CHORDS[u.add[0]].on },
+  }, u));
+
+  // Parcours progressions : oreille relative (les degrés), dans des tonalités variées.
+  const PROG_UNITS = [[0, 1], [2], [3], [4], [5], [6], [7, 8]].map((add, i, all) => ({
+    track: 'progs', index: i, add, items: all.slice(0, i + 1).flat(), range: 1, timbre: 'piano', color: ((i + 2) % 5) + 1,
+    kicker: add.length > 1 ? 'deux progressions' : PROGS[add[0]].nick.toLowerCase(),
+    blurb: [
+      () => 'Deux enchaînements de quatre accords. Le premier se termine par une cadence (V puis I) qui conclut ; le second tourne en boucle.',
+      () => 'Le pilier du jazz : un accord mineur (ii), une septième de dominante (V7), puis la résolution sur la tonique.',
+      () => 'La progression des années 50 : le vi mineur arrive dès le deuxième accord.',
+      () => 'Les mêmes accords que la progression pop, mais on part du mineur (vi). Écoute bien le point de départ.',
+      () => 'Le turnaround ramène vers le début : il reste en suspens sur la dominante.',
+      () => 'Chaque accord descend d’une quinte vers le suivant, jusqu’à la tonique.',
+      () => 'Deux progressions en mineur : la cadence mineure, et la cadence andalouse qui descend jusqu’à la dominante.',
+    ][i],
+  }));
+  const unitTitle = (u) => (u.title ? u.title
+    : u.track === 'chords' ? u.add.map(chordLabel).join(' et ')
+    : u.track === 'progs' ? u.add.map(progLabel).join(' et ')
+    : listNames(u.add));
 
   const KINDS = [
     { kind: 'decouverte', label: 'Découverte', length: 8, scramble: false, focusNew: true, thresholds: [50, 75, 90] },
@@ -1142,16 +1299,23 @@ th:last-child,td:last-child{padding-right:0}
     { kind: 'pratique', label: 'Pratique', length: 12, scramble: true, focusNew: false, thresholds: [50, 75, 90] },
     { kind: 'examen', label: 'Examen', length: 15, scramble: true, focusNew: false, shift: true, thresholds: [70, 85, 95] },
   ];
+  // Progressions : la Découverte reste en Do majeur (ou La mineur), puis la tonalité change à chaque question.
+  const PROG_KINDS = [
+    { kind: 'decouverte', label: 'Découverte', length: 6, scramble: false, focusNew: true, thresholds: [50, 75, 90] },
+    { kind: 'pratique', label: 'Pratique', length: 10, scramble: false, focusNew: false, shift: true, thresholds: [50, 75, 90] },
+    { kind: 'examen', label: 'Examen', length: 12, scramble: false, focusNew: false, shift: true, thresholds: [70, 85, 95] },
+  ];
   const TRACKS = {
     notes: { units: UNITS, kinds: KINDS, prefix: 'u', unitWord: 'notes' },
     chords: { units: CHORD_UNITS, kinds: CHORD_KINDS, prefix: 'a', unitWord: 'accords' },
+    progs: { units: PROG_UNITS, kinds: PROG_KINDS, prefix: 'p', unitWord: 'progressions' },
   };
-  const LESSONS = { notes: [], chords: [] };
+  const LESSONS = { notes: [], chords: [], progs: [] };
   Object.keys(TRACKS).forEach((track) => {
     const T = TRACKS[track];
     T.units.forEach((u) => T.kinds.forEach((k, j) => LESSONS[track].push(Object.assign({ id: T.prefix + (u.index + 1) + '-' + k.kind, track, unit: u.index, pos: j, count: T.kinds.length }, k))));
   });
-  const LESSON_BY_ID = Object.fromEntries(LESSONS.notes.concat(LESSONS.chords).map((L) => [L.id, L]));
+  const LESSON_BY_ID = Object.fromEntries([].concat(LESSONS.notes, LESSONS.chords, LESSONS.progs).map((L) => [L.id, L]));
   const examId = (track, ui) => TRACKS[track].prefix + (ui + 1) + '-examen';
 
   /* ---------- Sauvegarde de l'historique ---------- */
@@ -1366,11 +1530,20 @@ th:last-child,td:last-child{padding-right:0}
   /* ---------- Configurations de séance ---------- */
   function introFor(u) {
     if (u.track === 'chords') {
+      const first = u.index === 0;
       return {
-        heading: u.add.length > 1 ? 'Premiers accords' : 'Nouvel accord',
-        title: u.add.length > 1 ? 'Deux accords, deux couleurs' : 'Voici ' + chordLabel(u.add[0]),
+        heading: u.add.length > 1 ? (first ? 'Premiers accords' : 'Nouveaux accords') : 'Nouvel accord',
+        title: first ? 'Deux accords, deux couleurs' : u.add.length > 1 ? u.title : 'Voici ' + chordLabel(u.add[0]),
         samples: u.add.map((c) => ({ chord: c })),
         known: u.items.filter((c) => !u.add.includes(c)),
+      };
+    }
+    if (u.track === 'progs') {
+      return {
+        heading: u.add.length > 1 ? 'Nouvelles progressions' : 'Nouvelle progression',
+        title: u.add.length > 1 ? 'Deux progressions à reconnaître' : 'Voici ' + progLabel(u.add[0]),
+        samples: u.add.map((p) => ({ prog: p })),
+        known: u.items.filter((p) => !u.add.includes(p)),
       };
     }
     if (u.add.length) {
@@ -1398,19 +1571,21 @@ th:last-child,td:last-child{padding-right:0}
     }
     return {
       track: L.track, mode: L.kind === 'examen' ? 'exam' : 'lesson', lessonId: L.id, unit: L.unit, color: u.color, style: u.style || null,
-      kicker: (L.track === 'chords' ? 'Accords · ' : '') + 'Unité ' + (L.unit + 1) + ' · ' + (opts && opts.jump ? 'Test de passage' : L.label),
+      kicker: TRACK_PREFIX[L.track] + 'Unité ' + (L.unit + 1) + ' · ' + (opts && opts.jump ? 'Test de passage' : L.label),
       notes: u.items.slice(), range: u.range, timbre: u.timbre, length: L.length,
       scrambleAllowed: !!L.scramble, scramble: !!L.scramble && settings.scramble, shift: !!L.shift,
       weights, thresholds: L.thresholds, intro: L.kind === 'decouverte' ? introFor(u) : null, jump: !!(opts && opts.jump),
     };
   }
+  const TRACK_PREFIX = { notes: '', chords: 'Accords · ', progs: 'Progressions · ' };
   function reviewConfig(track) {
     const u = TRACKS[track].units[pathState(track).unitNow];
+    const canScramble = track !== 'progs';
     return {
       track, mode: 'review', lessonId: null, unit: u.index, color: u.color, style: u.style || null,
-      kicker: (track === 'chords' ? 'Accords · ' : '') + 'Révision ciblée',
+      kicker: TRACK_PREFIX[track] + 'Révision ciblée',
       notes: u.items.slice(), range: u.range, timbre: u.timbre, length: 12,
-      scrambleAllowed: true, scramble: settings.scramble, shift: track === 'chords',
+      scrambleAllowed: canScramble, scramble: canScramble && settings.scramble, shift: track !== 'notes',
       weights: weakWeights(track, u.items), thresholds: null, intro: null, jump: false,
     };
   }
@@ -1482,7 +1657,7 @@ th:last-child,td:last-child{padding-right:0}
     d.setAttribute('aria-label', 'Accords de l’unité : ' + u.items.map(chordLabel).join(', '));
     u.items.forEach((c) => {
       const f = el('i', u.add.includes(c) ? 'new' : '');
-      f.style.background = 'var(--f' + c + ')';
+      f.style.background = CHORDS[c].fc;
       d.appendChild(f);
     });
     return d;
@@ -1556,6 +1731,7 @@ th:last-child,td:last-child{padding-right:0}
     $('#opt-auto-path').checked = settings.auto;
     $('#opt-scramble').checked = settings.scramble;
     $('#opt-scramble-path').checked = settings.scramble;
+    $('#opt-arp-path').checked = settings.arpeggio;
   }
   function renderAside() {
     const xp = todayXP(), g = settings.goal;
@@ -1594,11 +1770,13 @@ th:last-child,td:last-child{padding-right:0}
     const weakList = u.items.filter((i) => stats[i].n >= 3)
       .map((i) => ({ i, a: (100 * stats[i].ok) / stats[i].n }))
       .sort((a, b) => a.a - b.a).slice(0, 3);
-    $('#review-text').textContent = (track === 'chords' ? 'Les accords que tu rates le plus reviennent plus souvent, à des octaves variées.' : 'Les notes que tu rates le plus reviennent plus souvent.')
+    $('#review-text').textContent = (track === 'chords' ? 'Les accords que tu rates le plus reviennent plus souvent, à des octaves variées.'
+      : track === 'progs' ? 'Les progressions que tu confonds le plus reviennent plus souvent, dans des tonalités variées.'
+      : 'Les notes que tu rates le plus reviennent plus souvent.')
       + ' Ces séances ne comptent pas dans ta courbe de score.';
     const weak = $('#weak');
     weak.textContent = '';
-    if (!any) weak.appendChild(el('p', 'caption', 'Termine ta première leçon ' + (track === 'chords' ? 'd’accords ' : '') + 'pour débloquer la révision.'));
+    if (!any) weak.appendChild(el('p', 'caption', 'Termine ta première leçon ' + (track === 'chords' ? 'd’accords ' : track === 'progs' ? 'de progressions ' : '') + 'pour débloquer la révision.'));
     else if (!weakList.length) weak.appendChild(el('p', 'caption', 'Pas encore assez de réponses pour repérer tes points faibles.'));
     else weakList.forEach((x) => weak.appendChild(el('span', 'wchip ' + (x.a >= 80 ? 'good' : x.a >= 50 ? 'mid' : 'weak'), itemName(track, x.i) + ' ' + pct(x.a))));
     $('#btn-review').disabled = !any;
@@ -1617,7 +1795,8 @@ th:last-child,td:last-child{padding-right:0}
   const ZIG = [0, 46, 70, 46, 0, -46, -70, -46];
   const TRACK_INTRO = {
     notes: 'Reconnais chaque note seule. Elles sont jouées sur plusieurs octaves pour que la hauteur ne te donne pas la réponse.',
-    chords: 'Méthode de Kazuko Eguchi : on reconnaît des accords comme des couleurs, un nouvel accord par unité. Conçue pour les enfants de 2 à 6 ans, elle prépare ensuite à nommer les notes seules.',
+    chords: 'D’abord la méthode de Kazuko Eguchi : reconnaître des accords comme des couleurs, un nouvel accord par unité (conçue pour les enfants de 2 à 6 ans). Puis les accords mineurs, diminués, augmentés, de septième et de sixte.',
+    progs: 'Reconnais les enchaînements d’accords les plus courants par leurs degrés (I, IV, V…). Ils changent de tonalité à chaque question : c’est l’oreille relative, complémentaire de l’oreille absolue.',
   };
   function renderPath() {
     const track = settings.track;
@@ -1646,7 +1825,7 @@ th:last-child,td:last-child{padding-right:0}
         j.addEventListener('click', () => startLesson(lessonConfig(LESSON_BY_ID[examId(track, u.index)], { jump: true })));
         txt.appendChild(j);
       }
-      head.append(txt, track === 'chords' ? flagsRow(u) : miniKeyboard(u));
+      head.append(txt, track === 'chords' ? flagsRow(u) : track === 'progs' ? el('span', 'unit-deg', PROGS[u.add[u.add.length - 1]].degs.map((d) => DEG[d][2]).join(' ')) : miniKeyboard(u));
       sec.appendChild(head);
 
       const ol = el('ol', 'nodes');
@@ -1681,8 +1860,10 @@ th:last-child,td:last-child{padding-right:0}
       const end = el('div', 'path-end');
       end.innerHTML = svgIcon('examen');
       end.append(el('h3', 'h3', 'Parcours terminé'), el('p', '', track === 'chords'
-        ? 'Tu reconnais les neuf accords de la méthode. Passe au parcours Notes seules pour nommer chaque note isolée.'
-        : 'Garde ton oreille en forme avec la révision ciblée et l’entraînement libre, ou rejoue les leçons pour décrocher trois étoiles partout.'));
+        ? 'Tu reconnais les accords de la méthode Eguchi et les principales qualités d’accord. Le parcours Notes seules t’apprend à nommer chaque note isolée.'
+        : track === 'progs'
+          ? 'Tu reconnais les progressions les plus courantes, dans toutes les tonalités. Garde-les en tête avec la révision ciblée.'
+          : 'Garde ton oreille en forme avec la révision ciblée et l’entraînement libre, ou rejoue les leçons pour décrocher trois étoiles partout.'));
       box.appendChild(end);
     }
     if (focusedId) { const f = box.querySelector('[data-id="' + focusedId + '"]'); if (f) f.focus({ preventScroll: true }); }
@@ -1695,7 +1876,7 @@ th:last-child,td:last-child{padding-right:0}
     p.append(
       el('p', 'pop-title', L.label),
       el('p', 'pop-sub', 'Leçon ' + (L.pos + 1) + ' sur ' + L.count + ' · ' + L.length + ' ' + TRACKS[L.track].unitWord + ' · '
-        + (L.track === 'chords' ? (L.shift ? 'octaves variées' : 'octave fixe') : RANGE_LABEL[u.range]))
+        + (L.track === 'chords' ? (L.shift ? 'octaves variées' : 'octave fixe') : L.track === 'progs' ? (L.shift ? 'tonalités variées' : 'en ' + progKeyName(u.add[0], progHomeKey(u.add[0])).label) : RANGE_LABEL[u.range]))
     );
     if (x.best && x.state === 'done') {
       p.append(el('p', 'pop-sub', 'Meilleur score : ' + x.best.score), starsEl(x.best.stars));
@@ -1790,6 +1971,11 @@ th:last-child,td:last-child{padding-right:0}
       const midis = CHORDS[pc].midis.map((m) => m + shift);
       return { midi: midis[0], midis, pc, timbre: 'piano', ready: false, t0: 0, answer: null, ms: 0, replays: 0 };
     }
+    if (cfg.track === 'progs') {
+      const key = cfg.shift ? Math.floor(Math.random() * 12) : progHomeKey(pc);
+      const prog = voiceProgression(pc, key);
+      return { midi: prog[0][0], prog, key, pc, timbre: 'piano', ready: false, t0: 0, answer: null, ms: 0, replays: 0 };
+    }
     const [lo, hi] = RANGES[cfg.range];
     const options = [];
     for (let m = lo; m <= hi; m++) if (m % 12 === pc) options.push(m);
@@ -1808,6 +1994,13 @@ th:last-child,td:last-child{padding-right:0}
     }
     renderPlay();
     later(() => playCurrent(true), delay * 1000);
+  }
+  // Bouton « Arpège » (accords) : s'applique dès le prochain son joué.
+  function toggleArp() {
+    settings.arpeggio = !settings.arpeggio;
+    saveSettings();
+    renderPrefs();
+    if (session) renderPlay();
   }
   // Bouton « Brouillage » de l'écran d'entraînement : change le réglage tout de suite.
   function toggleScramble() {
@@ -1952,6 +2145,10 @@ th:last-child,td:last-child{padding-right:0}
     scr.hidden = !cfg.scrambleAllowed;
     scr.setAttribute('aria-pressed', String(!!cfg.scramble));
     scr.setAttribute('aria-label', 'Brouillage ' + (cfg.scramble ? 'activé' : 'désactivé'));
+    const arp = $('#btn-arp');
+    arp.hidden = cfg.track !== 'chords';
+    arp.setAttribute('aria-pressed', String(settings.arpeggio));
+    arp.setAttribute('aria-label', 'Accords en arpège ' + (settings.arpeggio ? 'activé' : 'désactivé'));
     $('#lbar-fill').style.width = (100 * s.trials.length) / cfg.length + '%';
     $('#combo').textContent = s.combo >= 3 ? s.combo + ' d’affilée' : '';
     $('#btn-quit').setAttribute('aria-label', cfg.mode === 'free' || cfg.mode === 'review' ? 'Terminer la séance' : 'Quitter la leçon');
@@ -1961,10 +2158,11 @@ th:last-child,td:last-child{padding-right:0}
     if (s.phase === 'intro') { renderIntro(); renderSheet(); return; }
 
     const chords = cfg.track === 'chords';
+    const progs = cfg.track === 'progs';
     const live = !!(cur && cur.ready && !answered && !s.quit);
-    $('#piano').hidden = chords;
-    $('#chordpad').hidden = !chords;
-    if (chords) {
+    $('#piano').hidden = chords || progs;
+    $('#chordpad').hidden = !(chords || progs);
+    if (chords || progs) {
       renderChordpad(live);
     } else {
       keyEls.forEach((b, pc) => {
@@ -1982,13 +2180,17 @@ th:last-child,td:last-child{padding-right:0}
     if (!answered) {
       const waiting = !cur || !cur.ready;
       rv.append(
-        el('p', 'prompt', chords ? 'Quel est cet accord ?' : 'Quelle est cette note ?'),
-        el('p', 'sub', waiting ? (cur && cur.scrambling ? 'Son de brouillage, la question arrive…' : 'Écoute…') : chords ? 'Choisis le bon accord.' : 'Réponds sur le clavier.')
+        el('p', 'prompt', chords ? 'Quel est cet accord ?' : progs ? 'Quelle est cette progression ?' : 'Quelle est cette note ?'),
+        el('p', 'sub', waiting ? (cur && cur.scrambling ? 'Son de brouillage, la question arrive…' : 'Écoute…')
+          : chords ? 'Choisis le bon accord.' : progs ? 'Choisis la bonne suite d’accords.' : 'Réponds sur le clavier.')
       );
+    } else if (progs) {
+      const big = el('p', 'big chord', progLabel(cur.pc));
+      rv.append(big, el('p', 'hz', 'En ' + progKeyName(cur.pc, cur.key).label + ' : ' + progChords(cur.pc, cur.key)));
     } else if (chords) {
       const big = el('p', 'big chord');
       big.append(flagEl(cur.pc), chordLabel(cur.pc));
-      rv.append(big, el('p', 'hz', chordNotes(cur.midis) + ' · ' + CHORDS[cur.pc].flag));
+      rv.append(big, el('p', 'hz', chordNotes(cur.midis) + (CHORDS[cur.pc].flag ? ' · ' + CHORDS[cur.pc].flag : '')));
     } else {
       const big = el('p', 'big');
       big.append(pcName(cur.pc), el('span', 'oct', String(octaveOf(cur.midi))));
@@ -2003,16 +2205,24 @@ th:last-child,td:last-child{padding-right:0}
     const pad = $('#chordpad');
     pad.textContent = '';
     pad.classList.toggle('live', live);
+    const progs = s.cfg.track === 'progs';
+    pad.classList.toggle('progs', progs);
     s.cfg.notes.forEach((i) => {
       const b = el('button', 'ccard');
       b.type = 'button';
-      b.style.setProperty('--fc', 'var(--f' + i + ')');
       if (answered && i === cur.pc) b.classList.add('ok');
       if (answered && i === cur.answer && i !== cur.pc) b.classList.add('ko');
       const t = el('span', 'ctext');
-      t.append(el('b', '', chordLabel(i)), el('small', '', chordName(i) + ' · ' + CHORDS[i].flag));
-      b.append(el('span', 'flag'), t);
-      b.setAttribute('aria-label', chordLabel(i) + ', ' + chordName(i) + ', ' + CHORDS[i].flag);
+      if (progs) {
+        t.append(el('b', '', progLabel(i)), el('small', '', PROGS[i].nick));
+        b.append(t);
+        b.setAttribute('aria-label', progLabel(i) + ', ' + PROGS[i].nick);
+      } else {
+        b.style.setProperty('--fc', CHORDS[i].fc);
+        t.append(el('b', '', chordLabel(i)), el('small', '', chordSub(i)));
+        b.append(el('span', 'flag'), t);
+        b.setAttribute('aria-label', chordLabel(i) + ', ' + chordSub(i));
+      }
       b.addEventListener('click', () => answer(i));
       pad.appendChild(b);
     });
@@ -2062,14 +2272,26 @@ th:last-child,td:last-child{padding-right:0}
     sh.className = 'sheet ' + (ok ? 'good' : 'bad');
     icon.innerHTML = svgIcon(ok ? 'check' : 'cross');
     const chords = s.cfg.track === 'chords';
+    const progs = s.cfg.track === 'progs';
     if (ok) {
-      txt.append(el('p', 'sheet-title', PRAISE[s.trials.length % PRAISE.length]), el('p', 'sheet-detail', (chords ? chordLabel(cur.pc) : noteName(cur.midi)) + ' · répondu en ' + fmtSec(cur.ms)));
+      const what = chords ? chordLabel(cur.pc) : progs ? PROGS[cur.pc].nick + ', en ' + progKeyName(cur.pc, cur.key).label : noteName(cur.midi);
+      txt.append(el('p', 'sheet-title', PRAISE[s.trials.length % PRAISE.length]), el('p', 'sheet-detail', what + ' · répondu en ' + fmtSec(cur.ms)));
+    } else if (progs) {
+      txt.append(
+        el('p', 'sheet-title', 'C’était ' + progLabel(cur.pc)),
+        el('p', 'sheet-detail', PROGS[cur.pc].nick + ' (' + progChords(cur.pc, cur.key) + '). Tu as répondu ' + progLabel(cur.answer) + '. Compare les deux :')
+      );
+      const other = voiceProgression(cur.answer, cur.key);
+      actions.append(
+        compareBtn(progLabel(cur.pc), () => playProgression(cur.prog, cur.timbre)),
+        compareBtn(progLabel(cur.answer), () => playProgression(other, cur.timbre))
+      );
     } else if (chords) {
       const shift = cur.midis[0] - CHORDS[cur.pc].midis[0];
       const aMidis = CHORDS[cur.answer].midis.map((m) => m + shift);
       txt.append(
         el('p', 'sheet-title', 'C’était ' + chordLabel(cur.pc)),
-        el('p', 'sheet-detail', chordName(cur.pc) + ', ' + CHORDS[cur.pc].flag + '. Tu as répondu ' + chordLabel(cur.answer) + ' (' + chordName(cur.answer) + '). Compare les deux :')
+        el('p', 'sheet-detail', chordSub(cur.pc) + '. Tu as répondu ' + chordLabel(cur.answer) + ' (' + chordName(cur.answer) + '). Compare les deux :')
       );
       actions.append(
         compareBtn(chordLabel(cur.pc) + ' · joué', () => playChord(cur.midis, cur.timbre)),
@@ -2101,13 +2323,16 @@ th:last-child,td:last-child{padding-right:0}
     const s = session;
     const it = s.cfg.intro;
     const chords = s.cfg.track === 'chords';
+    const progs = s.cfg.track === 'progs';
     const u = TRACKS[s.cfg.track].units[s.cfg.unit];
     $('#intro-heading').textContent = it.heading;
     $('#intro-title').textContent = it.title;
-    $('#intro-blurb').textContent = u.blurb(pcName) + ' Écoute chaque son plusieurs fois et essaie de retenir sa couleur.';
+    $('#intro-blurb').textContent = u.blurb(pcName) + (progs
+      ? ' Ici en ' + progKeyName(u.add[0], progHomeKey(u.add[0])).label + ' ; ensuite, la tonalité changera à chaque question.'
+      : ' Écoute chaque son plusieurs fois et essaie de retenir sa couleur.');
     const box = $('#intro-notes');
     box.textContent = '';
-    const mixed = !chords && it.samples.some((x) => x.timbre !== it.samples[0].timbre);
+    const mixed = !chords && !progs && it.samples.some((x) => x.timbre !== it.samples[0].timbre);
     it.samples.forEach((smp, i) => {
       const b = el('button', 'inote' + (s.heard.has(i) ? ' heard' : ''));
       b.type = 'button';
@@ -2115,11 +2340,16 @@ th:last-child,td:last-child{padding-right:0}
       pl.innerHTML = PLAY_SVG;
       const t = el('span');
       let label, play;
-      if (chords) {
-        b.style.setProperty('--uc', 'var(--f' + smp.chord + ')');
-        b.style.setProperty('--on-u', 'var(--on-f' + smp.chord + ')');
+      if (progs) {
+        const key = progHomeKey(smp.prog);
+        label = progLabel(smp.prog);
+        t.append(el('b', '', progLabel(smp.prog)), el('small', '', PROGS[smp.prog].nick + ' · ' + progChords(smp.prog, key)));
+        play = () => playProgression(voiceProgression(smp.prog, key), 'piano');
+      } else if (chords) {
+        b.style.setProperty('--uc', CHORDS[smp.chord].fc);
+        b.style.setProperty('--on-u', CHORDS[smp.chord].on);
         label = chordLabel(smp.chord);
-        t.append(el('b', '', chordLabel(smp.chord)), el('small', '', chordName(smp.chord) + ' · ' + CHORDS[smp.chord].flag));
+        t.append(el('b', '', chordLabel(smp.chord)), el('small', '', chordSub(smp.chord)));
         play = () => playChord(CHORDS[smp.chord].midis, 'piano');
       } else {
         label = noteName(smp.midi) + (mixed ? ', ' + TIMBRE_LABEL[smp.timbre] : '');
@@ -2139,9 +2369,13 @@ th:last-child,td:last-child{padding-right:0}
       it.known.forEach((i) => {
         const b = el('button', 'kchip');
         b.type = 'button';
-        if (chords) {
+        if (progs) {
+          b.textContent = progLabel(i);
+          b.setAttribute('aria-label', 'Écouter ' + progLabel(i) + ', ' + PROGS[i].nick);
+          b.addEventListener('click', () => { stopAll(); playProgression(voiceProgression(i, progHomeKey(i)), 'piano'); });
+        } else if (chords) {
           b.append(flagEl(i), chordLabel(i));
-          b.setAttribute('aria-label', 'Écouter l’accord ' + CHORDS[i].flag);
+          b.setAttribute('aria-label', 'Écouter ' + chordLabel(i));
           b.addEventListener('click', () => { stopAll(); playChord(CHORDS[i].midis, 'piano'); });
         } else {
           b.textContent = pcName(i);
@@ -2237,7 +2471,7 @@ th:last-child,td:last-child{padding-right:0}
     if (!miss.size) box.appendChild(el('span', 'mchip okc', 'Sans faute'));
     [...miss.entries()].sort((a, b) => b[1] - a[1]).forEach(([k, c]) => {
       const t = Math.floor(k / 12), a = k % 12;
-      const label = cfg.track === 'chords' ? chordLabel(t) + ' → ' + chordLabel(a) : pcName(t) + ' → ' + pcName(a);
+      const label = itemName(cfg.track, t) + ' → ' + itemName(cfg.track, a);
       box.appendChild(el('span', 'mchip', label + (c > 1 ? ' ×' + c : '')));
     });
 
@@ -2283,7 +2517,7 @@ th:last-child,td:last-child{padding-right:0}
   };
   function sessionLabel(s) {
     const L = s.lessonId ? LESSON_BY_ID[s.lessonId] : null;
-    const pre = trackOf(s) === 'chords' ? 'Accords · ' : '';
+    const pre = TRACK_PREFIX[trackOf(s)];
     if (L) return pre + (s.jump ? 'test unité ' : 'U') + (L.unit + 1) + (s.jump ? '' : ' · ' + L.label);
     if (s.mode === 'review') return pre + 'Révision';
     if (s.mode === 'test') return 'Test général';
@@ -2478,18 +2712,21 @@ th:last-child,td:last-child{padding-right:0}
   }
   function renderNotes(data, track) {
     const chords = track === 'chords';
+    const progs = track === 'progs';
+    const wide = chords || progs;
+    const word = chords ? ['accord', 'Accord', 'Joué', 'L’accord le plus fragile'] : progs ? ['progression', 'Progression', 'Jouée', 'La progression la plus fragile'] : ['note', 'Note', 'Jouée', 'La note la plus fragile'];
     const rows = recentTrials(data, 300);
-    const st = Array.from({ length: chords ? CHORDS.length : 12 }, () => ({ n: 0, ok: 0 }));
+    const st = Array.from({ length: itemCount(track) }, () => ({ n: 0, ok: 0 }));
     rows.forEach((r) => { if (st[r.t]) { st[r.t].n++; if (r.a === r.t) st[r.t].ok++; } });
-    $('#per-note-title').textContent = chords ? 'Réussite par accord' : 'Réussite par note';
+    $('#per-note-title').textContent = 'Réussite par ' + word[0];
     const box = $('#per-note');
     box.textContent = '';
-    const head = el('div', 'nrow head' + (chords ? ' wide' : ''));
-    head.append(el('span', '', chords ? 'Accord' : 'Note'), el('span'), el('span', '', 'Juste'), el('span', '', chords ? 'Joué' : 'Jouée'));
+    const head = el('div', 'nrow head' + (wide ? ' wide' : ''));
+    head.append(el('span', '', word[1]), el('span'), el('span', '', 'Juste'), el('span', '', word[2]));
     box.appendChild(head);
     let weakest = null;
     st.forEach((x, pc) => {
-      const row = el('div', 'nrow' + (chords ? ' wide' : ''));
+      const row = el('div', 'nrow' + (wide ? ' wide' : ''));
       const bar = el('div', 'nbar');
       const fill = el('i');
       if (x.n) {
@@ -2502,13 +2739,13 @@ th:last-child,td:last-child{padding-right:0}
       }
       bar.appendChild(fill);
       const name = el('span', 'nname');
-      if (chords) name.append(flagEl(pc), chordLabel(pc)); else name.textContent = pcName(pc);
+      if (chords) name.append(flagEl(pc), chordLabel(pc)); else name.textContent = itemName(track, pc);
       row.append(name, bar, el('span', 'npct', x.n ? pct((100 * x.ok) / x.n) : '—'), el('span', 'ncount', x.n ? String(x.n) : ''));
       box.appendChild(row);
     });
     $('#per-note-caption').textContent = rows.length ? 'Sur tes ' + rows.length + ' dernières réponses.' : 'Pas encore de réponses.';
     $('#weakest').textContent = weakest && weakest.a < 100
-      ? (chords ? 'Accord le plus fragile : ' : 'Note la plus fragile : ') + itemName(track, weakest.pc) + ', ' + pct(weakest.a) + ' de réussite.'
+      ? word[3] + ' : ' + itemName(track, weakest.pc) + ', ' + pct(weakest.a) + ' de réussite.'
       : '';
   }
   function renderConfusions(data, track) {
@@ -2529,8 +2766,10 @@ th:last-child,td:last-child{padding-right:0}
       const row = el('div', 'crow');
       const pair = el('span', 'cpair');
       if (chords) pair.append(flagEl(t), chordLabel(t), el('span', 'arrow', '→'), flagEl(a), chordLabel(a));
-      else pair.append(pcName(t), el('span', 'arrow', '→'), pcName(a));
-      const detail = chords ? chordName(t) + ' pris pour ' + chordName(a) + ' (' + CHORDS[t].flag + ' → ' + CHORDS[a].flag + ')' : pcName(t) + ' pris pour ' + pcName(a) + ', ' + intervalText(t, a);
+      else pair.append(itemName(track, t), el('span', 'arrow', '→'), itemName(track, a));
+      const detail = chords ? chordName(t) + ' pris pour ' + chordName(a)
+        : track === 'progs' ? PROGS[t].nick + ' prise pour ' + PROGS[a].nick.toLowerCase()
+        : pcName(t) + ' pris pour ' + pcName(a) + ', ' + intervalText(t, a);
       row.append(pair, el('span', 'cint', detail), el('span', 'ccount', c + ' fois'));
       box.appendChild(row);
     });
@@ -2590,6 +2829,8 @@ th:last-child,td:last-child{padding-right:0}
     $$('input[name="length"]').forEach((i) => i.addEventListener('change', () => { settings.length = Number(i.value); saveSettings(); }));
     ['#opt-scramble', '#opt-scramble-path'].forEach((id) => $(id).addEventListener('change', (e) => { settings.scramble = e.target.checked; saveSettings(); renderPrefs(); }));
     $('#btn-scramble').addEventListener('click', toggleScramble);
+    $('#btn-arp').addEventListener('click', toggleArp);
+    $('#opt-arp-path').addEventListener('change', (e) => { settings.arpeggio = e.target.checked; saveSettings(); renderPrefs(); });
     ['#btn-test', '#btn-test-m'].forEach((id) => $(id).addEventListener('click', () => startLesson(testConfig())));
     ['#opt-auto', '#opt-auto-path'].forEach((id) => $(id).addEventListener('change', (e) => { settings.auto = e.target.checked; saveSettings(); renderPrefs(); }));
     $('#btn-start').addEventListener('click', () => startLesson(freeConfig()));
@@ -2644,6 +2885,7 @@ th:last-child,td:last-child{padding-right:0}
       if (e.key === 'Escape') { e.preventDefault(); if (s.quit) resume(); else askQuit(); return; }
       if (s.quit) return;
       if ((e.key === 'b' || e.key === 'B') && s.cfg.scrambleAllowed) { e.preventDefault(); toggleScramble(); return; }
+      if ((e.key === 'a' || e.key === 'A') && s.cfg.track === 'chords') { e.preventDefault(); toggleArp(); return; }
       if ((e.code === 'Space' || e.key === ' ') && s.phase === 'quiz') {
         e.preventDefault();
         if (!e.repeat) playCurrent(false);
