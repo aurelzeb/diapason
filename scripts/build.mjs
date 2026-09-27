@@ -49,6 +49,14 @@ img{max-width:100%}
 ${src.trim()}
 <script>
 if ('serviceWorker' in navigator && location.protocol === 'https:' && !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) {
+  // Quand une nouvelle version prend le relais, on recharge pour l'afficher (sauf en pleine leçon).
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloading || document.body.classList.contains('in-lesson')) return;
+    reloading = true;
+    location.reload();
+  });
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
 </script>
@@ -103,8 +111,18 @@ self.addEventListener('activate', (e) => {
     .then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request)));
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  // La page elle-même : réseau d'abord, pour afficher tout de suite la dernière version ;
+  // la copie en cache ne sert que hors ligne.
+  if (req.mode === 'navigate' || req.destination === 'document') {
+    e.respondWith(fetch(req)
+      .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res; })
+      .catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match('./'))));
+    return;
+  }
+  // Polices, icônes, manifeste : cache d'abord (ils ne changent qu'avec une nouvelle version).
+  e.respondWith(caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req)));
 });
 `;
 await writeFile(path.join(www, 'sw.js'), sw);
