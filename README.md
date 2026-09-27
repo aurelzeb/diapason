@@ -3,7 +3,9 @@
 Entraînement à l’oreille absolue, en parcours progressif :
 
 - **Notes seules** : 9 unités, de Do et Sol jusqu’aux 12 notes sur cinq octaves et trois timbres. Les notes sont jouées sur plusieurs octaves pour que la hauteur ne donne pas la réponse.
-- **Accords (méthode Eguchi)** : les 9 accords de la méthode, reconnus comme des couleurs, un nouvel accord par unité.
+- **Accords (méthode Eguchi)** : les 9 accords de la méthode (Do majeur, Fa majeur 2ᵉ renversement…), associés à des couleurs, un nouvel accord par unité.
+- **Test général** : disponible à tout moment, 20 notes au hasard sur les 88 touches du piano.
+- **Brouillage** : un son au hasard, de la même durée que la question, joué avant chaque note pour empêcher de s’aider de la précédente. Il se coupe pendant l’entraînement (bouton ou touche B).
 - Révision ciblée sur les notes fragiles, objectif quotidien en XP, série de jours, calendrier et statistiques détaillées.
 
 Tout le son est synthétisé (Web Audio) : aucun fichier audio, l’appli fonctionne hors ligne.
